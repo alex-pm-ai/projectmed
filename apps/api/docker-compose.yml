@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: dalk-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: dalk
+      POSTGRES_PASSWORD: dalk
+      POSTGRES_DB: dalk
+    ports:
+      - "5433:5432"
+    volumes:
+      - dalk_pgdata:/var/lib/postgresql/data
+
+volumes:
+  dalk_pgdata:
