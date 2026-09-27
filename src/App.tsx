@@ -22,7 +22,7 @@ import { ConfigRevisao } from './pages/ConfigRevisao';
 function Loader({ texto }: { texto: string }) {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center gap-3 bg-background text-gray-400">
-      <Loader2 size={22} className="animate-spin text-primary" />
+      <Loader2 size={22} className="animate-spin text-accent" />
       <span className="text-sm">{texto}</span>
     </div>
   );

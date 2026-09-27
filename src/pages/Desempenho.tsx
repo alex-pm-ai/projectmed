@@ -138,7 +138,7 @@ export function Desempenho() {
       <div className="grid grid-cols-3 gap-4">
         <StatsCard label="Acurácia Geral" value={`${acuraciaGeral}%`} icon={<BarChart2 size={16} className="text-yellow-400" />} iconBg="bg-yellow-600/20" />
         <StatsCard label="Total de Horas" value={minutesToHours(totalHoras)} icon={<Clock size={16} className="text-purple-400" />} iconBg="bg-purple-600/20" />
-        <StatsCard label="Questões Realizadas" value={totalQuestoes} icon={<CheckSquare size={16} className="text-primary" />} />
+        <StatsCard label="Questões Realizadas" value={totalQuestoes} icon={<CheckSquare size={16} className="text-accent" />} />
       </div>
 
       <div className="grid grid-cols-2 gap-4">
@@ -146,7 +146,7 @@ export function Desempenho() {
         <div className="bg-card border border-card-border rounded-xl p-5">
           <div className="flex items-center justify-between mb-4">
             <p className="text-sm font-medium text-white flex items-center gap-2">
-              <span className="text-primary">↗</span> Questões Realizadas
+              <span className="text-accent">↗</span> Questões Realizadas
             </p>
             <div className="flex items-center gap-1">
               <PeriodBtn p="Semana" /><PeriodBtn p="Mês" />
@@ -159,7 +159,7 @@ export function Desempenho() {
               <XAxis dataKey="label" tick={{ fontSize: 10, fill: '#6b7280' }} axisLine={false} tickLine={false} />
               <YAxis tick={{ fontSize: 10, fill: '#6b7280' }} axisLine={false} tickLine={false} />
               <Tooltip content={<CustomTooltip />} />
-              <Line type="monotone" dataKey="questoes" name="Questões" stroke="#bcc829" strokeWidth={2} dot={{ fill: '#bcc829', r: 3 }} />
+              <Line type="monotone" dataKey="questoes" name="Questões" stroke="#5dd62c" strokeWidth={2} dot={{ fill: '#5dd62c', r: 3 }} />
             </LineChart>
           </ResponsiveContainer>
         </div>

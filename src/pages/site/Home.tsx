@@ -49,15 +49,16 @@ export function Home() {
       <SiteHeader />
 
       {/* Hero */}
-      <section className="max-w-3xl mx-auto px-4 py-20 text-center">
-        <h1 className="font-heading text-4xl font-bold text-white mb-4">
-          Estude com método. Evolua com dados.
+      <section className="relative max-w-3xl mx-auto px-4 py-20 text-center">
+        <div aria-hidden className="pointer-events-none absolute inset-x-0 top-10 -z-0 mx-auto h-64 max-w-xl rounded-full bg-brand-gradient opacity-20 blur-3xl" />
+        <h1 className="relative font-heading text-4xl font-bold text-white mb-4">
+          Estude com método. <span className="text-brand-gradient">Evolua com dados.</span>
         </h1>
-        <p className="text-gray-400 text-lg mb-8">
+        <p className="relative text-gray-400 text-lg mb-8">
           A Mindfast organiza sua rotina de estudos e mostra exatamente onde você está evoluindo —
           feita para estudantes de medicina e residentes.
         </p>
-        <div className="flex items-center justify-center gap-3">
+        <div className="relative flex items-center justify-center gap-3">
           <Link
             to="/planos"
             className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-5 py-2.5 rounded-lg transition-colors"
@@ -81,8 +82,8 @@ export function Home() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {FUNCIONALIDADES.map(({ icon: Icon, titulo, texto }) => (
             <div key={titulo} className="bg-card border border-card-border rounded-xl p-5">
-              <div className="w-9 h-9 rounded-lg bg-primary/20 flex items-center justify-center mb-3">
-                <Icon size={18} className="text-primary" />
+              <div className="w-9 h-9 rounded-lg bg-accent/20 flex items-center justify-center mb-3">
+                <Icon size={18} className="text-accent" />
               </div>
               <h3 className="text-sm font-medium text-white mb-1">{titulo}</h3>
               <p className="text-xs text-gray-500">{texto}</p>

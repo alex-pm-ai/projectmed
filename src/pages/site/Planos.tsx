@@ -59,13 +59,13 @@ export function Planos() {
 
               <ul className="space-y-2 mb-6 text-sm text-gray-300">
                 <li className="flex items-center gap-2">
-                  <Check size={14} className="text-primary flex-shrink-0" /> Cronograma de revisões
+                  <Check size={14} className="text-accent flex-shrink-0" /> Cronograma de revisões
                 </li>
                 <li className="flex items-center gap-2">
-                  <Check size={14} className="text-primary flex-shrink-0" /> Dashboard de desempenho
+                  <Check size={14} className="text-accent flex-shrink-0" /> Dashboard de desempenho
                 </li>
                 <li className="flex items-center gap-2">
-                  <Check size={14} className="text-primary flex-shrink-0" /> Foco Prova e simulados
+                  <Check size={14} className="text-accent flex-shrink-0" /> Foco Prova e simulados
                 </li>
               </ul>
 

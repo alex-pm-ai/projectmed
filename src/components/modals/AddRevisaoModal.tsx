@@ -62,7 +62,7 @@ export function AddRevisaoModal({ open, onClose, defaultTipo }: Props) {
             <select
               value={tipo}
               onChange={e => setTipo(e.target.value as TipoAtividade)}
-              className="w-full bg-muted border border-card-border rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary"
+              className="w-full bg-muted border border-card-border rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-accent"
             >
               <option value="Questoes">Questões</option>
               <option value="Flashcards">Flashcards</option>
@@ -74,7 +74,7 @@ export function AddRevisaoModal({ open, onClose, defaultTipo }: Props) {
             <select
               value={area}
               onChange={e => { setArea(e.target.value as GrandeArea); setSubArea(''); }}
-              className="w-full bg-muted border border-card-border rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary"
+              className="w-full bg-muted border border-card-border rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-accent"
             >
               {GRANDES_AREAS.map(a => <option key={a} value={a}>{a}</option>)}
             </select>
@@ -89,7 +89,7 @@ export function AddRevisaoModal({ open, onClose, defaultTipo }: Props) {
               value={subArea}
               onChange={e => setSubArea(e.target.value)}
               placeholder="Ex: Esquizofrenia"
-              className="w-full bg-muted border border-card-border rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-primary"
+              className="w-full bg-muted border border-card-border rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-accent"
             />
             <datalist id={`subareas-${area}`}>
               {SUB_AREAS[area]?.map(s => <option key={s} value={s} />)}
@@ -98,7 +98,7 @@ export function AddRevisaoModal({ open, onClose, defaultTipo }: Props) {
           <div className="flex items-end">
             <label
               className={`flex items-center gap-2.5 cursor-pointer select-none w-full bg-muted border rounded-lg px-3 py-2.5 transition-colors ${
-                inteligente ? 'border-primary bg-primary/10' : 'border-card-border'
+                inteligente ? 'border-accent bg-accent/10' : 'border-card-border'
               }`}
             >
               <div
@@ -121,7 +121,7 @@ export function AddRevisaoModal({ open, onClose, defaultTipo }: Props) {
               type="date"
               value={data}
               onChange={e => setData(e.target.value)}
-              className="w-full bg-muted border border-card-border rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary"
+              className="w-full bg-muted border border-card-border rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-accent"
             />
           </div>
           <div>
@@ -131,7 +131,7 @@ export function AddRevisaoModal({ open, onClose, defaultTipo }: Props) {
               value={tempo}
               onChange={e => setTempo(e.target.value)}
               placeholder="Ex: 45"
-              className="w-full bg-muted border border-card-border rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-primary"
+              className="w-full bg-muted border border-card-border rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-accent"
             />
           </div>
         </div>
@@ -151,7 +151,7 @@ export function AddRevisaoModal({ open, onClose, defaultTipo }: Props) {
                   value={feitas}
                   onChange={e => setFeitas(e.target.value)}
                   placeholder="0"
-                  className="w-full bg-muted border border-card-border rounded-l-lg px-3 py-2 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-primary"
+                  className="w-full bg-muted border border-card-border rounded-l-lg px-3 py-2 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-accent"
                 />
                 <span className="bg-muted border border-l-0 border-card-border rounded-r-lg px-3 py-2 text-xs text-gray-500">TOTAL</span>
               </div>
@@ -166,7 +166,7 @@ export function AddRevisaoModal({ open, onClose, defaultTipo }: Props) {
                   value={acertadas}
                   onChange={e => setAcertadas(e.target.value)}
                   placeholder="0"
-                  className="w-full bg-muted border border-card-border rounded-l-lg px-3 py-2 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-primary"
+                  className="w-full bg-muted border border-card-border rounded-l-lg px-3 py-2 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-accent"
                 />
                 <span className="bg-muted border border-l-0 border-card-border rounded-r-lg px-3 py-2 text-xs text-green-500">ACERTOS</span>
               </div>
@@ -179,7 +179,7 @@ export function AddRevisaoModal({ open, onClose, defaultTipo }: Props) {
                 {Number(feitas) > 0 ? `${aproveitamento}%` : '0%'}
               </p>
               {proxima && Number(feitas) > 0 && (
-                <p className="text-xs text-gray-500 mt-0.5">Próxima revisão: <span className="text-primary">{proxima}</span></p>
+                <p className="text-xs text-gray-500 mt-0.5">Próxima revisão: <span className="text-accent">{proxima}</span></p>
               )}
             </div>
             <div className="text-right">

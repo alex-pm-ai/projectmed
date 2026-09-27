@@ -10,8 +10,8 @@ export function Logo({ size = 'md' }: { size?: keyof typeof SIZES }) {
   const s = SIZES[size];
   return (
     <div className="flex items-center gap-2">
-      <div className={`${s.box} rounded-lg bg-primary flex items-center justify-center`}>
-        <Zap size={s.icon} className="text-primary-foreground" />
+      <div className={`${s.box} rounded-lg bg-brand-gradient flex items-center justify-center`}>
+        <Zap size={s.icon} className="text-accent-foreground" />
       </div>
       <span className={`font-bold text-foreground ${s.text} tracking-wide font-heading`}>
         Mindfast

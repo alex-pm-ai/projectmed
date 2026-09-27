@@ -80,7 +80,7 @@ export function ConfigRevisao() {
                   max="365"
                   value={faixa.dias}
                   onChange={e => updateDias(idx, Math.max(1, Number(e.target.value)))}
-                  className="w-16 bg-muted border border-card-border rounded-lg px-2 py-1.5 text-sm text-white text-center focus:outline-none focus:border-primary"
+                  className="w-16 bg-muted border border-card-border rounded-lg px-2 py-1.5 text-sm text-white text-center focus:outline-none focus:border-accent"
                 />
                 <span className="text-xs text-gray-500">DIAS</span>
               </div>

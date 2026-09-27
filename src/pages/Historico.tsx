@@ -52,12 +52,12 @@ export function Historico() {
           <input
             value={search} onChange={e => setSearch(e.target.value)}
             placeholder="Buscar por tema..."
-            className="w-full bg-card border border-card-border rounded-lg pl-8 pr-3 py-2 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-primary"
+            className="w-full bg-card border border-card-border rounded-lg pl-8 pr-3 py-2 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-accent"
           />
         </div>
         <select
           value={filterArea} onChange={e => setFilterArea(e.target.value)}
-          className="bg-card border border-card-border rounded-lg px-3 py-2 text-sm text-gray-300 focus:outline-none focus:border-primary"
+          className="bg-card border border-card-border rounded-lg px-3 py-2 text-sm text-gray-300 focus:outline-none focus:border-accent"
         >
           {areas.map(a => <option key={a} value={a}>{a}</option>)}
         </select>

@@ -65,7 +65,7 @@ export function Login() {
                   value={nome}
                   onChange={(e) => setNome(e.target.value)}
                   required
-                  className="w-full bg-muted border border-card-border rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-primary"
+                  className="w-full bg-muted border border-card-border rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-accent"
                 />
               </div>
             )}
@@ -77,7 +77,7 @@ export function Login() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full bg-muted border border-card-border rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-primary"
+                className="w-full bg-muted border border-card-border rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-accent"
               />
             </div>
 
@@ -89,7 +89,7 @@ export function Login() {
                 onChange={(e) => setSenha(e.target.value)}
                 required
                 minLength={6}
-                className="w-full bg-muted border border-card-border rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-primary"
+                className="w-full bg-muted border border-card-border rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-accent"
               />
             </div>
 
@@ -114,7 +114,7 @@ export function Login() {
                 setModo(modo === 'login' ? 'register' : 'login');
                 setErro('');
               }}
-              className="text-xs text-gray-500 hover:text-primary transition-colors"
+              className="text-xs text-gray-500 hover:text-accent transition-colors"
             >
               {modo === 'login'
                 ? 'Não tem conta? Cadastre-se'

@@ -56,7 +56,7 @@ export function Simulados() {
       </div>
 
       <div className="grid grid-cols-3 gap-4">
-        <StatsCard label="Simulados Realizados" value={count} icon={<BarChart2 size={16} className="text-primary" />} />
+        <StatsCard label="Simulados Realizados" value={count} icon={<BarChart2 size={16} className="text-accent" />} />
         <StatsCard
           label="Média de Acertos"
           value={`${mediaAcertos}%`}
@@ -80,7 +80,7 @@ export function Simulados() {
                 <PolarGrid stroke="rgba(255,255,255,0.09)" />
                 <PolarAngleAxis dataKey="area" tick={{ fontSize: 10, fill: '#6b7280' }} />
                 <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
-                <Radar name="%" dataKey="pct" stroke="#bcc829" fill="#bcc829" fillOpacity={0.3} strokeWidth={2} />
+                <Radar name="%" dataKey="pct" stroke="#5dd62c" fill="#5dd62c" fillOpacity={0.3} strokeWidth={2} />
                 <Tooltip
                   content={({ active, payload }: any) => {
                     if (!active || !payload?.[0]) return null;

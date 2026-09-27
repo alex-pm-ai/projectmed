@@ -62,7 +62,7 @@ export function Sidebar({ open, onClose, onAddRevisao, onAddFlashcard }: Props) 
               className={({ isActive }) =>
                 `flex items-center gap-2.5 px-4 py-2 mx-2 rounded-lg text-sm transition-colors ${
                   isActive
-                    ? 'bg-primary/20 text-primary font-medium'
+                    ? 'bg-accent/20 text-accent font-medium'
                     : 'text-gray-400 hover:text-gray-200 hover:bg-white/5'
                 }`
               }
@@ -84,7 +84,7 @@ export function Sidebar({ open, onClose, onAddRevisao, onAddFlashcard }: Props) 
         </button>
         <button
           onClick={onAddRevisao}
-          className="w-full flex items-center justify-center gap-2 py-2 rounded-lg bg-primary/20 text-primary hover:bg-primary/30 text-sm font-medium transition-colors"
+          className="w-full flex items-center justify-center gap-2 py-2 rounded-lg bg-accent/20 text-accent hover:bg-accent/30 text-sm font-medium transition-colors"
         >
           <Plus size={14} />
           Adicionar Revisão
@@ -94,7 +94,7 @@ export function Sidebar({ open, onClose, onAddRevisao, onAddFlashcard }: Props) 
       {/* User */}
       <div className="border-t border-card-border px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2 min-w-0">
-          <div className="w-7 h-7 rounded-full bg-primary flex items-center justify-center text-xs font-bold text-primary-foreground flex-shrink-0">
+          <div className="w-7 h-7 rounded-full bg-brand-gradient flex items-center justify-center text-xs font-bold text-accent-foreground flex-shrink-0">
             {(usuario?.nome ?? 'DA').slice(0, 2).toUpperCase()}
           </div>
           <div className="min-w-0">
