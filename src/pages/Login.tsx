@@ -7,7 +7,7 @@ import { Logo } from '../components/ui/Logo';
 export function Login() {
   const login = useAuthStore((s) => s.login);
   const register = useAuthStore((s) => s.register);
-  const accessToken = useAuthStore((s) => s.accessToken);
+  const usuario = useAuthStore((s) => s.usuario);
 
   const [searchParams] = useSearchParams();
   const planoParam = searchParams.get('plano');
@@ -30,13 +30,19 @@ export function Login() {
       if (modo === 'login') await login(email, senha);
       else await register(nome, email, senha);
     } catch (err) {
-      setErro(err instanceof ApiError ? err.message : 'Não foi possível conectar ao servidor.');
+      if (err instanceof ApiError) {
+        // Erro de validação: mostra o motivo específico (ex.: "Essa senha é muito comum")
+        const issues = (err.body as { issues?: Record<string, string[]> } | undefined)?.issues;
+        setErro(Object.values(issues ?? {}).flat()[0] ?? err.message);
+      } else {
+        setErro('Não foi possível conectar ao servidor.');
+      }
     } finally {
       setLoading(false);
     }
   }
 
-  if (accessToken) return <Navigate to={destinoAutenticado} replace />;
+  if (usuario) return <Navigate to={destinoAutenticado} replace />;
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
@@ -88,9 +94,14 @@ export function Login() {
                 value={senha}
                 onChange={(e) => setSenha(e.target.value)}
                 required
-                minLength={6}
+                minLength={modo === 'register' ? 8 : undefined}
+                maxLength={128}
+                autoComplete={modo === 'register' ? 'new-password' : 'current-password'}
                 className="w-full bg-muted border border-card-border rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-primary"
               />
+              {modo === 'register' && (
+                <p className="text-[11px] text-gray-500 mt-1">Mínimo de 8 caracteres. Evite senhas óbvias.</p>
+              )}
             </div>
 
             {erro && (

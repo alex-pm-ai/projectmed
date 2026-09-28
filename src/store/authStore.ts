@@ -12,6 +12,7 @@ export interface UsuarioAuth {
   nome: string;
   email: string;
   tipo: string;
+  emailVerificado: boolean;
 }
 
 export interface AssinaturaInfo {
@@ -23,7 +24,6 @@ export interface AssinaturaInfo {
 
 interface TokensResp {
   accessToken: string;
-  refreshToken: string;
   usuario: UsuarioAuth;
 }
 
@@ -33,8 +33,8 @@ interface MeResp {
 }
 
 interface AuthState {
+  // Só em memória: some ao recarregar a página e é renovado pelo cookie httpOnly.
   accessToken: string | null;
-  refreshToken: string | null;
   usuario: UsuarioAuth | null;
   assinatura: AssinaturaInfo | null;
   carregado: boolean; // /auth/me já resolveu nesta sessão
@@ -47,24 +47,30 @@ interface AuthState {
   marcarAssinaturaInativa: () => void;
 }
 
+// Versões antigas guardavam os tokens no localStorage (chave "dalk-auth"): apaga.
+try {
+  localStorage.removeItem('dalk-auth');
+} catch {
+  /* navegador sem localStorage */
+}
+
 export const useAuthStore = create<AuthState>()(
   persist(
     (set, get) => ({
       accessToken: null,
-      refreshToken: null,
       usuario: null,
       assinatura: null,
       carregado: false,
 
       login: async (email, senha) => {
         const r = await api.post<TokensResp>('/auth/login', { email, senha });
-        set({ accessToken: r.accessToken, refreshToken: r.refreshToken, usuario: r.usuario });
+        set({ accessToken: r.accessToken, usuario: r.usuario });
         await get().carregarMe();
       },
 
       register: async (nome, email, senha) => {
         const r = await api.post<TokensResp>('/auth/register', { nome, email, senha });
-        set({ accessToken: r.accessToken, refreshToken: r.refreshToken, usuario: r.usuario });
+        set({ accessToken: r.accessToken, usuario: r.usuario });
         await get().carregarMe();
       },
 
@@ -98,17 +104,12 @@ export const useAuthStore = create<AuthState>()(
       },
 
       tentarRefresh: async () => {
-        const rt = get().refreshToken;
-        if (!rt) return false;
+        // O refresh token vai sozinho no cookie httpOnly (credentials: 'include').
         try {
-          const res = await fetch(API_URL + '/auth/refresh', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ refreshToken: rt }),
-          });
+          const res = await fetch(API_URL + '/auth/refresh', { method: 'POST', credentials: 'include' });
           if (!res.ok) return false;
-          const d = (await res.json()) as { accessToken: string; refreshToken: string };
-          set({ accessToken: d.accessToken, refreshToken: d.refreshToken });
+          const d = (await res.json()) as { accessToken: string };
+          set({ accessToken: d.accessToken });
           return true;
         } catch {
           return false;
@@ -116,15 +117,12 @@ export const useAuthStore = create<AuthState>()(
       },
 
       logout: async () => {
-        const rt = get().refreshToken;
-        if (rt) {
-          try {
-            await api.post('/auth/logout', { refreshToken: rt });
-          } catch {
-            /* ignora */
-          }
+        try {
+          await api.post('/auth/logout');
+        } catch {
+          /* ignora */
         }
-        set({ accessToken: null, refreshToken: null, usuario: null, assinatura: null, carregado: false });
+        set({ accessToken: null, usuario: null, assinatura: null, carregado: false });
         useStore.getState().limpar();
       },
 
@@ -138,13 +136,10 @@ export const useAuthStore = create<AuthState>()(
       },
     }),
     {
-      name: 'dalk-auth',
-      // persiste só os tokens + usuário (assinatura é sempre revalidada via /auth/me)
-      partialize: (s) => ({
-        accessToken: s.accessToken,
-        refreshToken: s.refreshToken,
-        usuario: s.usuario,
-      }),
+      name: 'pm-auth',
+      // Persiste só o usuário (nome/e-mail, para a interface). Nenhum token vai para o
+      // localStorage: o access token fica em memória e o refresh token no cookie httpOnly.
+      partialize: (s) => ({ usuario: s.usuario }),
     }
   )
 );

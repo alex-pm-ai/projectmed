@@ -15,7 +15,7 @@ interface Plano {
 }
 
 export function Planos() {
-  const accessToken = useAuthStore((s) => s.accessToken);
+  const usuario = useAuthStore((s) => s.usuario);
   const navigate = useNavigate();
 
   const [planos, setPlanos] = useState<Plano[]>([]);
@@ -26,7 +26,7 @@ export function Planos() {
   }, []);
 
   function contratar(planoId: string) {
-    if (accessToken) {
+    if (usuario) {
       navigate(`/app?plano=${planoId}`);
     } else {
       navigate(`/login?modo=register&plano=${planoId}`);

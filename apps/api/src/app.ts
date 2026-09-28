@@ -1,6 +1,7 @@
 import Fastify, { type FastifyError } from 'fastify';
 import cors from '@fastify/cors';
 import rateLimit from '@fastify/rate-limit';
+import cookie from '@fastify/cookie';
 import { ZodError } from 'zod';
 import { env } from './shared/env.js';
 import { AppError } from './shared/errors.js';
@@ -40,6 +41,7 @@ export async function buildApp() {
   });
 
   await app.register(cors, { origin: env.WEB_ORIGIN, credentials: true });
+  await app.register(cookie);
   if (env.NODE_ENV !== 'test') {
     await app.register(rateLimit, { max: 100, timeWindow: '1 minute' });
   }

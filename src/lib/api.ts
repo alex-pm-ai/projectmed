@@ -20,15 +20,16 @@ interface Init {
 }
 
 async function request<T>(path: string, init: Init, retry = true): Promise<T> {
-  const { accessToken, refreshToken } = useAuthStore.getState();
+  const { accessToken, usuario } = useAuthStore.getState();
   const headers: Record<string, string> = {};
   if (init.body !== undefined) headers['Content-Type'] = 'application/json';
   if (accessToken) headers['Authorization'] = `Bearer ${accessToken}`;
 
-  const res = await fetch(API_URL + path, { method: init.method, body: init.body, headers });
+  // credentials: 'include' envia o cookie httpOnly da sessão (usado só pelas rotas /auth).
+  const res = await fetch(API_URL + path, { method: init.method, body: init.body, headers, credentials: 'include' });
 
   // Token expirado → tenta refresh uma vez e repete
-  if (res.status === 401 && retry && refreshToken && !path.startsWith('/auth/')) {
+  if (res.status === 401 && retry && usuario && !path.startsWith('/auth/')) {
     const ok = await useAuthStore.getState().tentarRefresh();
     if (ok) return request<T>(path, init, false);
     void useAuthStore.getState().logout();

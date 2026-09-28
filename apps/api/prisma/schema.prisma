@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -14,13 +14,31 @@ datasource db {
 model Usuario {
   id        String   @id @default(cuid())
   nome      String
-  email     String   @unique
-  senha     String
+  email     String   @unique // sempre normalizado: minúsculas, sem espaços
+  senhaHash String // Argon2id (hash bcrypt legado é refeito no próximo login)
   tipo      String   @default("R1")
   gatewayId String? // id do cliente no provedor de pagamento (cus_xxx)
+
+  // Dados pessoais sensíveis: criptografados com AES-256-GCM (src/shared/crypto.ts).
+  // O *Hash é um HMAC determinístico, só para detectar duplicados sem descriptografar.
+  cpfCriptografado      String? @db.Text
+  cpfHash               String? @unique
+  telefoneCriptografado String? @db.Text
+
+  emailVerificadoEm DateTime?
+  termosAceitosEm   DateTime?
+  termosVersao      String?
+
+  // Proteção contra tentativa e erro de senha
+  tentativasLoginFalhas Int       @default(0)
+  bloqueadoAte          DateTime?
+  ultimoLoginEm         DateTime?
+
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   refreshTokens   RefreshToken[]
+  tokensUsoUnico  TokenUsoUnico[]
   revisoes        Revisao[]
   simulados       Simulado[]
   tarefas         Tarefa[]
@@ -33,7 +51,7 @@ model Usuario {
 model RefreshToken {
   id        String   @id @default(cuid())
   usuarioId String
-  token     String   @unique
+  tokenHash String   @unique // SHA-256 do token; o token em si só existe no cookie do navegador
   expiresAt DateTime
   revoked   Boolean  @default(false)
   createdAt DateTime @default(now())
@@ -41,6 +59,21 @@ model RefreshToken {
   usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
 
   @@index([usuarioId])
+}
+
+// Links enviados por e-mail (confirmar e-mail, redefinir senha). Guarda só o hash.
+model TokenUsoUnico {
+  id        String    @id @default(cuid())
+  usuarioId String
+  tipo      String // verificar_email | redefinir_senha
+  tokenHash String    @unique
+  expiraEm  DateTime
+  usadoEm   DateTime?
+  createdAt DateTime  @default(now())
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@index([usuarioId, tipo])
 }
 
 // ──────────────────────────────────────────────
@@ -83,7 +116,7 @@ model Pagamento {
   status       String // pendente | aprovado | recusado | estornado
   metodo       String // pix | cartao | boleto
   gatewayPayId String   @unique // id da cobrança no provedor (idempotência)
-  pixQrCode    String?
+  pixQrCode    String?  @db.Text
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
@@ -148,7 +181,7 @@ model Simulado {
 model Tarefa {
   id        String   @id @default(cuid())
   usuarioId String
-  texto     String
+  texto     String   @db.Text
   concluida Boolean  @default(false)
   createdAt DateTime @default(now())
 

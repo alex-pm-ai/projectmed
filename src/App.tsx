@@ -29,7 +29,7 @@ function Loader({ texto }: { texto: string }) {
 }
 
 function RequireAuth({ children }: { children: React.ReactNode }) {
-  const accessToken = useAuthStore((s) => s.accessToken);
+  const usuario = useAuthStore((s) => s.usuario);
   const carregado = useAuthStore((s) => s.carregado);
   const assinatura = useAuthStore((s) => s.assinatura);
   const carregarMe = useAuthStore((s) => s.carregarMe);
@@ -37,17 +37,18 @@ function RequireAuth({ children }: { children: React.ReactNode }) {
   const dataCarregado = useStore((s) => s.carregado);
   const carregarTudo = useStore((s) => s.carregarTudo);
 
-  // Tem token mas ainda não validou a sessão → busca /auth/me
+  // Tem sessão (usuário salvo) mas ainda não validou → busca /auth/me,
+  // que renova o access token pelo cookie httpOnly se preciso
   useEffect(() => {
-    if (accessToken && !carregado) carregarMe().catch(() => {});
-  }, [accessToken, carregado, carregarMe]);
+    if (usuario && !carregado) carregarMe().catch(() => {});
+  }, [usuario, carregado, carregarMe]);
 
   // Assinatura ativa → carrega os dados do app
   useEffect(() => {
     if (assinatura?.ativa && !dataCarregado) carregarTudo().catch(() => {});
   }, [assinatura?.ativa, dataCarregado, carregarTudo]);
 
-  if (!accessToken) return <Navigate to="/login" replace />;
+  if (!usuario) return <Navigate to="/login" replace />;
   if (!carregado) return <Loader texto="Carregando sua sessão..." />;
   if (!assinatura?.ativa) return <Assinar />;
   if (!dataCarregado) return <Loader texto="Carregando seus dados..." />;

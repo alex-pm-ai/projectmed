@@ -41,8 +41,8 @@ const FAQ = [
 ];
 
 export function Home() {
-  const accessToken = useAuthStore((s) => s.accessToken);
-  if (accessToken) return <Navigate to="/app" replace />;
+  const usuario = useAuthStore((s) => s.usuario);
+  if (usuario) return <Navigate to="/app" replace />;
 
   return (
     <div className="min-h-screen bg-background">

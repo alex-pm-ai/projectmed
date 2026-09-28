@@ -15,16 +15,27 @@ export async function getApp(): Promise<FastifyInstance> {
   return appInstance;
 }
 
-/** Limpa todas as tabelas do schema de teste entre os casos. */
+/** Limpa todas as tabelas do banco de teste entre os casos. */
 export async function resetDb() {
-  await prisma.$executeRawUnsafe(
-    `TRUNCATE TABLE
-      "test"."RefreshToken","test"."Pagamento","test"."WebhookEvent","test"."Assinatura",
-      "test"."Revisao","test"."Simulado","test"."Tarefa","test"."ConfigAlgoritmo",
-      "test"."MetaSemanal","test"."Plano","test"."Usuario"
-     RESTART IDENTITY CASCADE;`
-  );
+  const tabelas = [
+    'RefreshToken', 'TokenUsoUnico', 'Pagamento', 'WebhookEvent', 'Assinatura',
+    'Revisao', 'Simulado', 'Tarefa', 'ConfigAlgoritmo', 'MetaSemanal', 'Plano', 'Usuario',
+  ];
+  // No MySQL o TRUNCATE não passa por cima de chaves estrangeiras; desliga a checagem
+  // numa transação para que tudo rode na mesma conexão.
+  await prisma.$transaction([
+    prisma.$executeRawUnsafe('SET FOREIGN_KEY_CHECKS = 0'),
+    ...tabelas.map((t) => prisma.$executeRawUnsafe(`TRUNCATE TABLE \`${t}\``)),
+    prisma.$executeRawUnsafe('SET FOREIGN_KEY_CHECKS = 1'),
+  ]);
 }
+
+/** Extrai o refresh token do cookie httpOnly devolvido pela API. */
+export function refreshDoCookie(res: { cookies: { name: string; value: string }[] }): string {
+  return res.cookies.find((c) => c.name === 'pm_refresh')?.value ?? '';
+}
+
+export const SENHA_TESTE = 'Residente#2026';
 
 /** Garante que exista ao menos um plano (para os testes de billing). */
 export async function ensurePlano() {
@@ -38,7 +49,7 @@ let counter = 0;
 interface UsuarioTeste {
   accessToken: string;
   refreshToken: string;
-  usuario: { id: string; nome: string; email: string; tipo: string };
+  usuario: { id: string; nome: string; email: string; tipo: string; emailVerificado: boolean };
   email: string;
   headers: { authorization: string };
 }
@@ -56,7 +67,7 @@ export async function registrar(
   const res = await app.inject({
     method: 'POST',
     url: '/auth/register',
-    payload: { nome: 'Residente Teste', email, senha: 'senha123', tipo: 'R1' },
+    payload: { nome: 'Residente Teste', email, senha: SENHA_TESTE, tipo: 'R1' },
   });
   const body = res.json();
 
@@ -74,6 +85,7 @@ export async function registrar(
 
   return {
     ...body,
+    refreshToken: refreshDoCookie(res),
     email,
     headers: { authorization: `Bearer ${body.accessToken}` },
   };

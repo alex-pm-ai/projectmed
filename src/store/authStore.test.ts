@@ -10,7 +10,7 @@ function res(status: number, body: unknown) {
   } as Response;
 }
 
-const usuario = { id: 'u1', nome: 'João', email: 'joao@test.com', tipo: 'R1' };
+const usuario = { id: 'u1', nome: 'João', email: 'joao@test.com', tipo: 'R1', emailVerificado: true };
 const assinatura = {
   status: 'ativa',
   ativa: true,
@@ -20,7 +20,6 @@ const assinatura = {
 
 const estadoInicial = {
   accessToken: null,
-  refreshToken: null,
   usuario: null,
   assinatura: null,
   carregado: false,
@@ -49,13 +48,14 @@ describe('authStore.carregarMe — recuperação de token expirado', () => {
           );
         }
         if (url.endsWith('/auth/refresh')) {
-          return Promise.resolve(res(200, { accessToken: 'novo-access', refreshToken: 'novo-refresh' }));
+          return Promise.resolve(res(200, { accessToken: 'novo-access' }));
         }
         return Promise.resolve(res(404, {}));
       })
     );
 
-    useAuthStore.setState({ accessToken: 'token-velho', refreshToken: 'rt-valido' });
+    // Recarregou a página: usuário salvo, access token (só em memória) velho.
+    useAuthStore.setState({ accessToken: 'token-velho', usuario });
     await useAuthStore.getState().carregarMe();
 
     const s = useAuthStore.getState();
@@ -83,13 +83,12 @@ describe('authStore.carregarMe — recuperação de token expirado', () => {
       })
     );
 
-    useAuthStore.setState({ accessToken: 'token-velho', refreshToken: 'rt-expirado' });
+    useAuthStore.setState({ accessToken: 'token-velho', usuario });
     await useAuthStore.getState().carregarMe();
 
     const s = useAuthStore.getState();
     // Sessão morta → sem token → App renderiza o <Login/> em vez de travar no loader.
     expect(s.accessToken).toBeNull();
-    expect(s.refreshToken).toBeNull();
     expect(s.usuario).toBeNull();
     expect(s.carregado).toBe(false);
   });
@@ -100,7 +99,7 @@ describe('authStore.carregarMe — recuperação de token expirado', () => {
       vi.fn(() => Promise.reject(new TypeError('Failed to fetch')))
     );
 
-    useAuthStore.setState({ accessToken: 'token-valido', refreshToken: 'rt-valido' });
+    useAuthStore.setState({ accessToken: 'token-valido', usuario });
 
     await expect(useAuthStore.getState().carregarMe()).rejects.toThrow();
 

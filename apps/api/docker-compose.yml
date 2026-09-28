@@ -1,16 +1,18 @@
+# Alternativa ao MariaDB instalado no Windows: sobe o mesmo banco via Docker.
 services:
-  postgres:
-    image: postgres:16-alpine
-    container_name: dalk-postgres
+  mariadb:
+    image: mariadb:11.4
+    container_name: projectmed-mariadb
     restart: unless-stopped
     environment:
-      POSTGRES_USER: dalk
-      POSTGRES_PASSWORD: dalk
-      POSTGRES_DB: dalk
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE: projectmed
+      MARIADB_USER: projectmed
+      MARIADB_PASSWORD: projectmed
     ports:
-      - "5433:5432"
+      - "3306:3306"
     volumes:
-      - dalk_pgdata:/var/lib/postgresql/data
+      - projectmed_data:/var/lib/mysql
 
 volumes:
-  dalk_pgdata:
+  projectmed_data:
