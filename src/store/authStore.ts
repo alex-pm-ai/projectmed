@@ -12,6 +12,7 @@ export interface UsuarioAuth {
   nome: string;
   email: string;
   tipo: string;
+  papel: string; // usuario | admin
   emailVerificado: boolean;
 }
 

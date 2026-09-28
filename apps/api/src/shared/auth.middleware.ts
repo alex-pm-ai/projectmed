@@ -27,10 +27,16 @@ export async function requireAuth(req: FastifyRequest, _reply: FastifyReply) {
  * NÃO use em /auth/* nem /billing/* (senão o usuário nunca consegue pagar).
  */
 export async function requireAssinatura(req: FastifyRequest, _reply: FastifyReply) {
-  const assinatura = await prisma.assinatura.findUnique({
-    where: { usuarioId: req.usuarioId },
+  const usuario = await prisma.usuario.findUnique({
+    where: { id: req.usuarioId },
+    select: { papel: true, assinatura: true },
   });
 
+  // Administrador (usuário master) não depende de assinatura.
+  if (usuario?.papel === 'admin') return;
+
+  // Sem pagamento, inadimplente (atrasada), cancelada ou vencida → bloqueado.
+  const assinatura = usuario?.assinatura;
   const ativa =
     assinatura &&
     assinatura.status === 'ativa' &&

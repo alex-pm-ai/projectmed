@@ -29,8 +29,22 @@ async function emitirTokens(usuarioId: string) {
   return { accessToken, refreshToken };
 }
 
-function publicUser(u: { id: string; nome: string; email: string; tipo: string; emailVerificadoEm: Date | null }) {
-  return { id: u.id, nome: u.nome, email: u.email, tipo: u.tipo, emailVerificado: !!u.emailVerificadoEm };
+function publicUser(u: {
+  id: string;
+  nome: string;
+  email: string;
+  tipo: string;
+  papel: string;
+  emailVerificadoEm: Date | null;
+}) {
+  return {
+    id: u.id,
+    nome: u.nome,
+    email: u.email,
+    tipo: u.tipo,
+    papel: u.papel,
+    emailVerificado: !!u.emailVerificadoEm,
+  };
 }
 
 export async function register(input: RegisterInput) {
@@ -135,6 +149,14 @@ export async function me(usuarioId: string) {
 
   const a = usuario.assinatura;
   const assinaturaAtiva = !!a && a.status === 'ativa' && a.validoAte.getTime() > Date.now();
+
+  // Admin entra sem assinatura (mesma regra do requireAssinatura).
+  if (usuario.papel === 'admin') {
+    return {
+      usuario: publicUser(usuario),
+      assinatura: { status: 'admin', validoAte: null, ativa: true, plano: null },
+    };
+  }
 
   return {
     usuario: publicUser(usuario),

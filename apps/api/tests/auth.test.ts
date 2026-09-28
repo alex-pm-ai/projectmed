@@ -121,6 +121,20 @@ describe('Autenticação (/auth)', () => {
     expect(body.assinatura.status).toBe('sem_assinatura');
   });
 
+  it('usuário admin (master) acessa o conteúdo sem assinatura', async () => {
+    const u = await registrar(app);
+    const semAssinatura = await app.inject({ method: 'GET', url: '/app/ping', headers: u.headers });
+    expect(semAssinatura.statusCode).toBe(402);
+
+    await prisma.usuario.update({ where: { id: u.usuario.id }, data: { papel: 'admin' } });
+    const comoAdmin = await app.inject({ method: 'GET', url: '/app/ping', headers: u.headers });
+    expect(comoAdmin.statusCode).toBe(200);
+
+    const me = (await app.inject({ method: 'GET', url: '/auth/me', headers: u.headers })).json();
+    expect(me.usuario.papel).toBe('admin');
+    expect(me.assinatura.ativa).toBe(true);
+  });
+
   it('/auth/me sem token retorna 401', async () => {
     const res = await app.inject({ method: 'GET', url: '/auth/me' });
     expect(res.statusCode).toBe(401);

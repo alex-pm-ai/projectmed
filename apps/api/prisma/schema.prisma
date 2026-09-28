@@ -17,6 +17,7 @@ model Usuario {
   email     String   @unique // sempre normalizado: minúsculas, sem espaços
   senhaHash String // Argon2id (hash bcrypt legado é refeito no próximo login)
   tipo      String   @default("R1")
+  papel     String   @default("usuario") // usuario | admin (admin acessa o app sem assinatura)
   gatewayId String? // id do cliente no provedor de pagamento (cus_xxx)
 
   // Dados pessoais sensíveis: criptografados com AES-256-GCM (src/shared/crypto.ts).

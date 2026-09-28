@@ -10,7 +10,7 @@ function res(status: number, body: unknown) {
   } as Response;
 }
 
-const usuario = { id: 'u1', nome: 'João', email: 'joao@test.com', tipo: 'R1', emailVerificado: true };
+const usuario = { id: 'u1', nome: 'João', email: 'joao@test.com', tipo: 'R1', papel: 'usuario', emailVerificado: true };
 const assinatura = {
   status: 'ativa',
   ativa: true,
