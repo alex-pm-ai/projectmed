@@ -9,7 +9,7 @@
 
 ## 1. Quem somos
 
-A Mindfast é uma plataforma de organização e acompanhamento de estudos para estudantes de medicina e residentes, oferecida por **[NOME DA EMPRESA OU DO TITULAR]**, inscrita no **[CNPJ/CPF nº ...]**, com sede em **[CIDADE/UF]** ("Mindfast", "nós").
+A Mindfast é uma plataforma de organização e acompanhamento de estudos para quem se prepara para provas, concursos, vestibulares, residência e outros objetivos de estudo, oferecida por **[NOME DA EMPRESA OU DO TITULAR]**, inscrita no **[CNPJ/CPF nº ...]**, com sede em **[CIDADE/UF]** ("Mindfast", "nós").
 
 Contato: **[E-MAIL DE SUPORTE]**.
 

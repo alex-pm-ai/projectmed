@@ -17,7 +17,7 @@ export const registerSchema = z.object({
     .min(8, 'A senha precisa ter pelo menos 8 caracteres')
     .max(128)
     .refine((s) => !senhaEhComum(s), 'Essa senha é muito comum, escolha outra'),
-  tipo: z.string().default('R1'),
+  tipo: z.string().trim().max(60).optional(),
 });
 
 export const loginSchema = z.object({

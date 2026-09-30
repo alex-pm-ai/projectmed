@@ -60,7 +60,7 @@ export function Login() {
           <p className="text-sm text-gray-500 mb-5">
             {modo === 'login'
               ? 'Acesse sua plataforma de estudos.'
-              : 'Comece sua preparação para a residência.'}
+              : 'Comece a organizar seus estudos hoje.'}
           </p>
 
           <form onSubmit={submit} className="space-y-3">

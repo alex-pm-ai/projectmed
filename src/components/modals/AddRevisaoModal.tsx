@@ -46,7 +46,7 @@ function somarDias(data: string, dias: number) {
 export function AddRevisaoModal({ open, onClose }: Props) {
   const { addRevisao, configAlgoritmo, areas, revisoes } = useStore();
   const [tipo, setTipo] = useState<TipoAtividade>('Questoes');
-  const [area, setArea] = useState<GrandeArea>(areas[0]?.nome ?? 'Clínica Médica');
+  const [area, setArea] = useState<GrandeArea>(areas[0]?.nome ?? 'Geral');
   const [subArea, setSubArea] = useState('');
   const [data, setData] = useState(today());
   const [tempo, setTempo] = useState('');

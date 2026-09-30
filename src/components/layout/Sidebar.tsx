@@ -91,7 +91,7 @@ export function Sidebar({ open, onClose, onAddRevisao }: Props) {
             {(usuario?.nome ?? 'DA').slice(0, 2).toUpperCase()}
           </div>
           <div className="min-w-0">
-            <p className="text-xs font-medium text-gray-200 truncate">{usuario?.nome ?? 'Residente'}</p>
+            <p className="text-xs font-medium text-gray-200 truncate">{usuario?.nome ?? 'Estudante'}</p>
             <p className="text-xs text-gray-500 truncate">{usuario?.email}</p>
           </div>
         </div>

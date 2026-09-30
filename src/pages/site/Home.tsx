@@ -9,7 +9,7 @@ import { SiteFooter } from '../../components/site/SiteFooter';
 const FUNCIONALIDADES = [
   { icon: Calendar, titulo: 'Cronograma de estudos', texto: 'Organize suas revisões por data, sem precisar montar planilha nenhuma.' },
   { icon: BarChart2, titulo: 'Dashboard de desempenho', texto: 'Acompanhe sua taxa de acertos e evolução semana a semana.' },
-  { icon: History, titulo: 'Histórico completo', texto: 'Todo questão e simulado registrado, sempre disponível pra consulta.' },
+  { icon: History, titulo: 'Histórico completo', texto: 'Toda questão e simulado registrados, sempre disponíveis para consulta.' },
   { icon: TrendingUp, titulo: 'Evolução por matéria', texto: 'Veja onde você está indo bem e onde precisa reforçar — por área.' },
   { icon: Target, titulo: 'Metas semanais', texto: 'Defina quantas questões quer resolver por semana e acompanhe o progresso.' },
   { icon: Repeat, titulo: 'Foco Prova', texto: 'Repetição espaçada: revisa mais o que você erra, menos o que já domina.' },
@@ -20,23 +20,23 @@ const FUNCIONALIDADES = [
 const FAQ = [
   {
     pergunta: 'Posso cancelar quando quiser?',
-    resposta: 'Sim. O cancelamento é imediato a partir da sua solicitação, e seu acesso continua valendo até o fim do período que você já pagou.',
+    resposta: 'Sim, sem multa nem fidelidade. Você cancela em "Minha assinatura" e o acesso continua valendo até o fim do período que já pagou. Nos primeiros 7 dias, você pode pedir o reembolso integral.',
   },
   {
-    pergunta: 'O que acontece se eu mudar de plano mensal pra anual?',
-    resposta: 'Ao assinar o plano anual, ele substitui a sua assinatura mensal atual — sem precisar cancelar nada antes.',
+    pergunta: 'Posso trocar do plano mensal para o anual?',
+    resposta: 'Pode. Cancele a assinatura mensal em "Minha assinatura" e assine o plano anual — seu acesso atual continua valendo até o fim do período já pago.',
   },
   {
     pergunta: 'A Mindfast tem aulas ou questões comentadas?',
     resposta: 'Não. A Mindfast é uma ferramenta de organização e acompanhamento de estudo — você estuda com o material que já usa, e a plataforma cuida do cronograma, das métricas e da repetição espaçada.',
   },
   {
-    pergunta: 'Funciona para quem já está na residência ou só para quem vai prestar a prova?',
-    resposta: 'Funciona para os dois casos — a organização do cronograma e o acompanhamento de desempenho servem tanto pra quem está se preparando pra prova quanto pra quem já está na residência.',
+    pergunta: 'Serve para qualquer prova ou área de estudo?',
+    resposta: 'Sim. Você cria as suas próprias áreas e conteúdos — vestibular, concursos, residência, certificações, faculdade ou o que estiver estudando — e a plataforma monta o cronograma a partir do seu desempenho em cada um.',
   },
   {
     pergunta: 'Quais formas de pagamento são aceitas?',
-    resposta: 'Hoje aceitamos Pix. Outras formas de pagamento estão no roadmap.',
+    resposta: 'Cartão de crédito, pelo Mercado Pago, com renovação automática. A Mindfast não recebe nem guarda os dados do seu cartão.',
   },
 ];
 
@@ -56,7 +56,7 @@ export function Home() {
         </h1>
         <p className="relative text-gray-400 text-lg mb-8">
           A Mindfast organiza sua rotina de estudos e mostra exatamente onde você está evoluindo —
-          feita para estudantes de medicina e residentes.
+          para quem se prepara para provas, concursos, vestibulares e residência.
         </p>
         <div className="relative flex items-center justify-center gap-3">
           <Link

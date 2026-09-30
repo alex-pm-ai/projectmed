@@ -34,7 +34,7 @@ function publicUser(u: {
   id: string;
   nome: string;
   email: string;
-  tipo: string;
+  tipo: string | null;
   papel: string;
   emailVerificadoEm: Date | null;
 }) {

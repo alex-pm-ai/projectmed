@@ -2,26 +2,22 @@ import { useState } from 'react';
 import { Modal } from '../ui/Modal';
 import { useStore } from '../../store/useStore';
 import { today } from '../../utils/dateUtils';
-import type { GrandeArea } from '../../types';
-
-const AREAS_SIMULADO: GrandeArea[] = [
-  'Clínica Médica', 'Cirurgia Geral',
-  'Ginecologia e Obstetrícia', 'Pediatria', 'Preventiva',
-];
-
 interface Props { open: boolean; onClose: () => void; }
 
 export function AddSimuladoModal({ open, onClose }: Props) {
   const { addSimulado } = useStore();
+  // Áreas configuradas pelo usuário (Foco Prova > Gerenciar áreas)
+  const areasSimulado = useStore((s) => s.areas).map((a) => a.nome);
   const [titulo, setTitulo] = useState('');
   const [ano, setAno] = useState(new Date().getFullYear().toString());
   const [data, setData] = useState(today());
   const [tempo, setTempo] = useState('150');
   const [total, setTotal] = useState('100');
   const [acertos, setAcertos] = useState('');
-  const [porArea, setPorArea] = useState<Record<string, { acertos: string; total: string }>>(
-    Object.fromEntries(AREAS_SIMULADO.map(a => [a, { acertos: '', total: '20' }]))
-  );
+  // Começa vazio: só entram no simulado as áreas que a pessoa preencher
+  // (antes vinha "total 20" em todas e gravava 0/20 nas áreas não preenchidas).
+  const [porArea, setPorArea] = useState<Record<string, { acertos: string; total: string }>>({});
+  const vazio = { acertos: '', total: '' };
 
   const nota = Number(total) > 0 ? Math.round((Number(acertos) / Number(total)) * 100) : 0;
 
@@ -35,14 +31,14 @@ export function AddSimuladoModal({ open, onClose }: Props) {
       questoesTotal: Number(total) || 0,
       questoesAcertadas: Number(acertos) || 0,
       nota,
-      detalhePorArea: AREAS_SIMULADO.map(a => ({
+      detalhePorArea: areasSimulado.map(a => ({
         area: a,
         acertos: Number(porArea[a]?.acertos) || 0,
         total: Number(porArea[a]?.total) || 0,
       })).filter(d => d.total > 0),
     });
     onClose();
-    setTitulo(''); setAcertos('');
+    setTitulo(''); setAcertos(''); setPorArea({});
   }
 
   return (
@@ -53,7 +49,7 @@ export function AddSimuladoModal({ open, onClose }: Props) {
             <label className="block text-xs text-gray-400 mb-1.5">Título</label>
             <input
               value={titulo} onChange={e => setTitulo(e.target.value)}
-              placeholder="Ex: ENAMED"
+              placeholder="Ex.: Simulado nacional 2026"
               className="w-full bg-muted border border-card-border rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-accent"
             />
           </div>
@@ -107,22 +103,22 @@ export function AddSimuladoModal({ open, onClose }: Props) {
         <div>
           <p className="text-xs text-gray-400 mb-2">Detalhe por Área (opcional)</p>
           <div className="space-y-2">
-            {AREAS_SIMULADO.map(a => (
+            {areasSimulado.map(a => (
               <div key={a} className="flex items-center gap-3">
                 <span className="text-xs text-gray-400 w-44 truncate">{a}</span>
                 <input
                   type="number"
                   placeholder="Acertos"
-                  value={porArea[a]?.acertos}
-                  onChange={e => setPorArea(p => ({ ...p, [a]: { ...p[a], acertos: e.target.value } }))}
+                  value={porArea[a]?.acertos ?? ''}
+                  onChange={e => setPorArea(p => ({ ...p, [a]: { ...(p[a] ?? vazio), acertos: e.target.value } }))}
                   className="w-24 bg-muted border border-card-border rounded-lg px-2 py-1 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-accent"
                 />
                 <span className="text-gray-600 text-xs">/</span>
                 <input
                   type="number"
                   placeholder="Total"
-                  value={porArea[a]?.total}
-                  onChange={e => setPorArea(p => ({ ...p, [a]: { ...p[a], total: e.target.value } }))}
+                  value={porArea[a]?.total ?? ''}
+                  onChange={e => setPorArea(p => ({ ...p, [a]: { ...(p[a] ?? vazio), total: e.target.value } }))}
                   className="w-24 bg-muted border border-card-border rounded-lg px-2 py-1 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-accent"
                 />
               </div>
