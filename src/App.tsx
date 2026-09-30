@@ -57,7 +57,6 @@ function RequireAuth({ children }: { children: React.ReactNode }) {
 
 function AppShell() {
   const [addRevisaoOpen, setAddRevisaoOpen] = useState(false);
-  const [addFlashcardOpen, setAddFlashcardOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
@@ -66,7 +65,6 @@ function AppShell() {
         open={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
         onAddRevisao={() => setAddRevisaoOpen(true)}
-        onAddFlashcard={() => setAddFlashcardOpen(true)}
       />
 
       <div className="md:ml-52 flex-1 flex flex-col min-h-screen">
@@ -86,11 +84,6 @@ function AppShell() {
       </div>
 
       <AddRevisaoModal open={addRevisaoOpen} onClose={() => setAddRevisaoOpen(false)} />
-      <AddRevisaoModal
-        open={addFlashcardOpen}
-        onClose={() => setAddFlashcardOpen(false)}
-        defaultTipo="Flashcards"
-      />
     </div>
   );
 }
