@@ -17,7 +17,9 @@
     "prisma:studio": "prisma studio",
     "db:seed": "tsx --env-file=.env prisma/seed.ts",
     "criar-master": "tsx --env-file=.env prisma/criar-master.ts",
-    "test:unit": "vitest run --config vitest.unit.config.ts"
+    "test:unit": "vitest run --config vitest.unit.config.ts",
+    "build:vercel": "esbuild src/vercel.ts --bundle --platform=node --format=esm --target=node20 --packages=external --outfile=dist/vercel.mjs",
+    "criar-master:prod": "tsx prisma/criar-master.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
@@ -39,6 +41,7 @@
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/node": "^22.10.5",
+    "esbuild": "^0.28.2",
     "typescript": "^5.7.2",
     "vitest": "^3.2.4"
   }

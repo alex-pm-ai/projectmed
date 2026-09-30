@@ -18,6 +18,8 @@ import { focoProvaRoutes } from './modules/foco-prova/foco-prova.routes.js';
 
 export async function buildApp() {
   const app = Fastify({
+    // Atrás do proxy da Vercel: usa o IP real do visitante (x-forwarded-for) no limite de tentativas
+    trustProxy: !!process.env.VERCEL,
     logger: env.NODE_ENV === 'test' ? false : env.NODE_ENV === 'development' ? { transport: undefined } : true,
   });
 

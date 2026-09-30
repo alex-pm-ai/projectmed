@@ -7,19 +7,21 @@ import { requireAuth } from '../../shared/auth.middleware.js';
 // O refresh token vive só neste cookie: httpOnly (JavaScript da página não lê),
 // Secure em produção (só HTTPS) e restrito às rotas /auth.
 export const REFRESH_COOKIE = 'pm_refresh';
+// Na Vercel a API fica em /api, então o navegador precisa mandar o cookie para /api/auth.
+const COOKIE_PATH = `${env.API_PREFIX}/auth`;
 
 function gravarCookie(reply: FastifyReply, refreshToken: string) {
   reply.setCookie(REFRESH_COOKIE, refreshToken, {
     httpOnly: true,
     secure: env.NODE_ENV === 'production',
     sameSite: 'lax',
-    path: '/auth',
+    path: COOKIE_PATH,
     maxAge: authService.REFRESH_TTL_MS / 1000,
   });
 }
 
 function apagarCookie(reply: FastifyReply) {
-  reply.clearCookie(REFRESH_COOKIE, { path: '/auth' });
+  reply.clearCookie(REFRESH_COOKIE, { path: COOKIE_PATH });
 }
 
 // Limite mais apertado nas rotas que aceitam senha (tentativa e erro).

@@ -1,6 +1,8 @@
 import { useAuthStore } from '../store/authStore';
 
-export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3333';
+// No PC a API roda à parte (porta 3333); publicada (Vercel) ela fica no mesmo endereço, em /api.
+export const API_URL =
+  import.meta.env.VITE_API_URL || (location.hostname === 'localhost' ? 'http://localhost:3333' : '/api');
 
 export class ApiError extends Error {
   status: number;

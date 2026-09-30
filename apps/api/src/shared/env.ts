@@ -20,6 +20,8 @@ const envSchema = z.object({
   PORT: z.coerce.number().default(3333),
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   WEB_ORIGIN: z.string().default('http://localhost:5173'),
+  // Prefixo da API quando servida junto do site (Vercel: "/api"). Define o caminho do cookie de sessão.
+  API_PREFIX: z.string().default(''),
   // Endereço público do app (usado no retorno do Mercado Pago). O MP não aceita
   // localhost: em desenvolvimento a volta é feita pela própria tela de assinatura.
   APP_URL: z.string().url().default('http://localhost:5173'),

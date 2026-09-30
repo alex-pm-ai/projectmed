@@ -1,12 +1,17 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "vite",
-  "buildCommand": "npm run build",
+  "installCommand": "npm install && npm install --prefix apps/api",
+  "buildCommand": "npm run --prefix apps/api prisma:generate && npm run build && npm run --prefix apps/api build:vercel && npm run --prefix apps/api migrate:deploy && npm run --prefix apps/api seed:prod && npm run --prefix apps/api criar-master:prod",
   "outputDirectory": "dist",
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
+  "functions": {
+    "api/handler.js": {
+      "maxDuration": 30,
+      "includeFiles": "apps/api/node_modules/{.prisma/client,@node-rs}/**"
     }
+  },
+  "rewrites": [
+    { "source": "/api/:path*", "destination": "/api/handler?__path=:path*" },
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
