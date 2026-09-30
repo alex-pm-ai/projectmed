@@ -3,11 +3,11 @@ import { TrendingUp, CheckCircle2, Clock, AlertTriangle, RefreshCw, ChevronLeft,
 import { useStore } from '../store/useStore';
 import { StatsCard } from '../components/ui/StatsCard';
 import { today, getWeekDays, DAY_NAMES_SHORT, formatDateShort, minutesToHours, startOfWeek, endOfWeek } from '../utils/dateUtils';
-import { AREA_COLORS } from '../data/areas';
-import type { GrandeArea } from '../types';
+import { corDaArea } from '../utils/cores';
 
 export function Dashboard() {
   const { revisoes, metaSemanal, setMetaSemanal, redistribuirAtrasadas } = useStore();
+  const areas = useStore((s) => s.areas);
   const [weekOffset, setWeekOffset] = useState(0);
   const [editMeta, setEditMeta] = useState(false);
   const [metaInput, setMetaInput] = useState(String(metaSemanal));
@@ -176,9 +176,9 @@ export function Dashboard() {
                       key={r.id}
                       className="text-[10px] px-1 py-0.5 rounded truncate"
                       style={{
-                        backgroundColor: `${AREA_COLORS[r.grandeArea as GrandeArea]}22`,
-                        color: AREA_COLORS[r.grandeArea as GrandeArea],
-                        borderLeft: `2px solid ${AREA_COLORS[r.grandeArea as GrandeArea]}`,
+                        backgroundColor: `${corDaArea(r.grandeArea, areas)}22`,
+                        color: corDaArea(r.grandeArea, areas),
+                        borderLeft: `2px solid ${corDaArea(r.grandeArea, areas)}`,
                       }}
                     >
                       {r.subArea}

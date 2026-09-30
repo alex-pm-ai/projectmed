@@ -1,13 +1,7 @@
 export type TipoAtividade = 'Questoes' | 'Flashcards' | 'Aula' | 'Simulado';
 
-export type GrandeArea =
-  | 'Clínica Médica'
-  | 'Pediatria'
-  | 'Cirurgia Geral'
-  | 'Ginecologia e Obstetrícia'
-  | 'Preventiva'
-  | 'Flashcards'
-  | 'Simulados';
+// Áreas são configuráveis por usuário (tabela Area) — qualquer nome é válido.
+export type GrandeArea = string;
 
 export type StatusRevisao = 'Pendente' | 'Concluída' | 'Atrasada';
 
@@ -24,6 +18,7 @@ export interface Revisao {
   status: StatusRevisao;
   proximaRevisao: string | null;
   gerarRevisaoInteligente: boolean;
+  origem?: 'manual' | 'foco_prova';
   createdAt: string;
 }
 
@@ -61,4 +56,27 @@ export interface FaixaAlgoritmo {
 
 export interface ConfigAlgoritmo {
   faixas: FaixaAlgoritmo[];
+}
+
+export interface Conteudo {
+  id: string;
+  areaId: string;
+  nome: string;
+  aproveitamento: number | null; // histórico de acertos (0-100); null = sem histórico
+  questoes: number;
+  fonte: 'conteudo' | 'area' | 'sem_historico';
+}
+
+export interface Area {
+  id: string;
+  nome: string;
+  cor: string;
+  conteudos: Conteudo[]; // em ordem alfabética
+}
+
+export interface ResultadoCronograma {
+  sessoes: number;
+  conteudos: number;
+  dias: number;
+  naoAgendados: string[];
 }

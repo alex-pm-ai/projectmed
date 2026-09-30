@@ -10,7 +10,7 @@ export const GRANDES_AREAS: GrandeArea[] = [
   'Simulados',
 ];
 
-export const SUB_AREAS: Record<GrandeArea, string[]> = {
+export const SUB_AREAS: Record<string, string[]> = {
   'Clínica Médica': [
     'Esquizofrenia', 'TOC', 'TEA e TDAH', 'Transtorno mental na infância',
     'Transtornos de Ansiedade', 'Transtornos de humor', 'Transtornos do uso de substâncias',
@@ -56,7 +56,7 @@ export const SUB_AREAS: Record<GrandeArea, string[]> = {
   'Simulados': ['Simulado completo', 'Simulado por área'],
 };
 
-export const AREA_COLORS: Record<GrandeArea, string> = {
+export const AREA_COLORS: Record<string, string> = {
   'Clínica Médica': '#818cf8',
   'Pediatria': '#f97316',
   'Cirurgia Geral': '#22c55e',

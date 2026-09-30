@@ -29,6 +29,7 @@ model Usuario {
   emailVerificadoEm DateTime?
   termosAceitosEm   DateTime?
   termosVersao      String?
+  areasIniciadasEm  DateTime? // quando recebeu as áreas/conteúdos padrão (só uma vez)
 
   // Proteção contra tentativa e erro de senha
   tentativasLoginFalhas Int       @default(0)
@@ -40,6 +41,8 @@ model Usuario {
 
   refreshTokens   RefreshToken[]
   tokensUsoUnico  TokenUsoUnico[]
+  areas           Area[]
+  conteudos       Conteudo[]
   revisoes        Revisao[]
   simulados       Simulado[]
   tarefas         Tarefa[]
@@ -153,12 +156,44 @@ model Revisao {
   status                  String // Pendente | Concluída | Atrasada
   proximaRevisao          String?
   gerarRevisaoInteligente Boolean  @default(true)
+  origem                  String   @default("manual") // manual | foco_prova
   createdAt               DateTime @default(now())
 
   usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
 
   @@index([usuarioId, dataRevisao])
   @@index([usuarioId, status])
+  @@index([usuarioId, origem])
+}
+
+// Áreas de estudo (Clínica Médica, Pediatria...) — cada usuário configura as suas.
+// Na primeira vez, recebe as áreas/conteúdos padrão (src/domain/conteudosPadrao.ts).
+// Revisões guardam o NOME da área/conteúdo; renomear aqui atualiza as revisões.
+model Area {
+  id        String   @id @default(cuid())
+  usuarioId String
+  nome      String
+  cor       String   @default("#a3a3a3")
+  createdAt DateTime @default(now())
+
+  usuario   Usuario    @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  conteudos Conteudo[]
+
+  @@unique([usuarioId, nome])
+}
+
+model Conteudo {
+  id        String   @id @default(cuid())
+  usuarioId String
+  areaId    String
+  nome      String
+  createdAt DateTime @default(now())
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  area    Area    @relation(fields: [areaId], references: [id], onDelete: Cascade)
+
+  @@unique([areaId, nome])
+  @@index([usuarioId])
 }
 
 model Simulado {

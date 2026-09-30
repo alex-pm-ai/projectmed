@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { criptografar, descriptografar, hashDeBusca, soDigitos } from '../src/shared/crypto.js';
+import { criptografar, descriptografar, hashDeBusca, soDigitos } from '../../src/shared/crypto.js';
 
 // Testes puros (não usam o banco): criptografia de CPF/telefone.
 describe('Criptografia de dados pessoais', () => {

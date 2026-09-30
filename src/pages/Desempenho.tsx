@@ -6,14 +6,14 @@ import {
 } from 'recharts';
 import { useStore } from '../store/useStore';
 import { StatsCard } from '../components/ui/StatsCard';
-import { AREA_COLORS } from '../data/areas';
+import { corDaArea } from '../utils/cores';
 import { daysAgo, DAY_NAMES_SHORT, minutesToHours, MONTH_NAMES, startOfMonth, formatDateShort } from '../utils/dateUtils';
-import type { GrandeArea } from '../types';
 
 type Period = 'Semana' | 'Mês';
 
 export function Desempenho() {
   const revisoes = useStore(s => s.revisoes);
+  const areas = useStore((s) => s.areas);
   const [period, setPeriod] = useState<Period>('Semana');
 
   const concluidas = revisoes.filter(r => r.status === 'Concluída');
@@ -117,14 +117,14 @@ export function Desempenho() {
         <PieChart width={160} height={160}>
           <Pie data={data} cx={75} cy={75} innerRadius={45} outerRadius={70} dataKey="value" paddingAngle={2}>
             {data.map((entry) => (
-              <Cell key={entry.name} fill={AREA_COLORS[entry.name as GrandeArea] ?? '#6b7280'} />
+              <Cell key={entry.name} fill={corDaArea(entry.name, areas)} />
             ))}
           </Pie>
         </PieChart>
         <div className="flex-1 space-y-1.5">
           {data.map(d => (
             <div key={d.name} className="flex items-center gap-2">
-              <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: AREA_COLORS[d.name as GrandeArea] ?? '#6b7280' }} />
+              <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: corDaArea(d.name, areas) }} />
               <span className="text-xs text-gray-400 flex-1 truncate">{d.name} ({d.pct}%)</span>
             </div>
           ))}

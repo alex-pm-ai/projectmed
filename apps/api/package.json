@@ -16,7 +16,8 @@
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio",
     "db:seed": "tsx --env-file=.env prisma/seed.ts",
-    "criar-master": "tsx --env-file=.env prisma/criar-master.ts"
+    "criar-master": "tsx --env-file=.env prisma/criar-master.ts",
+    "test:unit": "vitest run --config vitest.unit.config.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

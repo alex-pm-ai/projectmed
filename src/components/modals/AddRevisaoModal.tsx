@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Modal } from '../ui/Modal';
 import { useStore } from '../../store/useStore';
-import { GRANDES_AREAS, SUB_AREAS } from '../../data/areas';
+import { SUB_AREAS } from '../../data/areas';
 import { calcularAproveitamento, calcularProximaRevisao } from '../../utils/algoritmoRevisao';
 import { today } from '../../utils/dateUtils';
 import type { GrandeArea, TipoAtividade } from '../../types';
@@ -9,9 +9,12 @@ import type { GrandeArea, TipoAtividade } from '../../types';
 interface Props { open: boolean; onClose: () => void; defaultTipo?: TipoAtividade; }
 
 export function AddRevisaoModal({ open, onClose, defaultTipo }: Props) {
-  const { addRevisao, configAlgoritmo } = useStore();
+  const { addRevisao, configAlgoritmo, areas } = useStore();
   const [tipo, setTipo] = useState<TipoAtividade>(defaultTipo ?? 'Questoes');
-  const [area, setArea] = useState<GrandeArea>('Clínica Médica');
+  const [area, setArea] = useState<GrandeArea>(areas[0]?.nome ?? 'Clínica Médica');
+  // Áreas configuradas pelo usuário (já em ordem alfabética) + as especiais de Flashcards/Simulados
+  const opcoesArea = [...areas.map((a) => a.nome), ...['Flashcards', 'Simulados'].filter((n) => !areas.some((a) => a.nome === n))];
+  const sugestoes = areas.find((a) => a.nome === area)?.conteudos.map((c) => c.nome) ?? SUB_AREAS[area] ?? [];
   const [subArea, setSubArea] = useState('');
   const [data, setData] = useState(today());
   const [tempo, setTempo] = useState('');
@@ -76,7 +79,7 @@ export function AddRevisaoModal({ open, onClose, defaultTipo }: Props) {
               onChange={e => { setArea(e.target.value as GrandeArea); setSubArea(''); }}
               className="w-full bg-muted border border-card-border rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-accent"
             >
-              {GRANDES_AREAS.map(a => <option key={a} value={a}>{a}</option>)}
+              {opcoesArea.map(a => <option key={a} value={a}>{a}</option>)}
             </select>
           </div>
         </div>
@@ -92,7 +95,7 @@ export function AddRevisaoModal({ open, onClose, defaultTipo }: Props) {
               className="w-full bg-muted border border-card-border rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-accent"
             />
             <datalist id={`subareas-${area}`}>
-              {SUB_AREAS[area]?.map(s => <option key={s} value={s} />)}
+              {sugestoes.map(s => <option key={s} value={s} />)}
             </datalist>
           </div>
           <div className="flex items-end">

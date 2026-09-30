@@ -13,6 +13,8 @@ import { simuladosRoutes } from './modules/simulados/simulados.routes.js';
 import { tarefasRoutes } from './modules/tarefas/tarefas.routes.js';
 import { configRoutes } from './modules/config/config.routes.js';
 import { metaRoutes } from './modules/meta/meta.routes.js';
+import { areasRoutes, conteudosRoutes } from './modules/areas/areas.routes.js';
+import { focoProvaRoutes } from './modules/foco-prova/foco-prova.routes.js';
 
 export async function buildApp() {
   const app = Fastify({
@@ -35,6 +37,10 @@ export async function buildApp() {
     }
     if (error.statusCode === 429) {
       return reply.code(429).send({ error: 'rate_limit', message: 'Muitas requisições' });
+    }
+    // Erros do próprio Fastify com a requisição (JSON malformado, corpo inválido...) → 4xx, não 500
+    if (error.statusCode && error.statusCode >= 400 && error.statusCode < 500) {
+      return reply.code(error.statusCode).send({ error: 'bad_request', message: 'Requisição inválida' });
     }
     app.log.error(error);
     return reply.code(500).send({ error: 'internal_error', message: 'Erro interno' });
@@ -75,6 +81,9 @@ export async function buildApp() {
       await content.register(tarefasRoutes, { prefix: '/tarefas' });
       await content.register(configRoutes, { prefix: '/config' });
       await content.register(metaRoutes, { prefix: '/meta' });
+      await content.register(areasRoutes, { prefix: '/areas' });
+      await content.register(conteudosRoutes, { prefix: '/conteudos' });
+      await content.register(focoProvaRoutes, { prefix: '/foco-prova' });
     },
     { prefix: '/app' }
   );

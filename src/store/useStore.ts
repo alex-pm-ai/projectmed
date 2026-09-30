@@ -1,10 +1,11 @@
 import { create } from 'zustand';
 import { api } from '../lib/api';
 import { DEFAULT_CONFIG } from '../utils/algoritmoRevisao';
-import type { Revisao, Simulado, Tarefa, ConfigAlgoritmo } from '../types';
+import type { Revisao, Simulado, Tarefa, ConfigAlgoritmo, Area, ResultadoCronograma } from '../types';
 
 interface DataState {
   carregado: boolean;
+  areas: Area[];
   revisoes: Revisao[];
   simulados: Simulado[];
   tarefas: Tarefa[];
@@ -27,10 +28,21 @@ interface DataState {
   clearTarefasConcluidas: () => Promise<void>;
   setConfigAlgoritmo: (c: ConfigAlgoritmo) => Promise<void>;
   setMetaSemanal: (m: number) => Promise<void>;
+
+  // Áreas e conteúdos (configuráveis) + cronograma Foco Prova
+  carregarAreas: () => Promise<void>;
+  criarArea: (nome: string) => Promise<void>;
+  renomearArea: (id: string, nome: string) => Promise<void>;
+  removerArea: (id: string) => Promise<void>;
+  criarConteudo: (areaId: string, nome: string) => Promise<void>;
+  removerConteudo: (id: string) => Promise<void>;
+  gerarCronograma: (dataProva: string, conteudoIds: string[], maxPorDia: number) => Promise<ResultadoCronograma>;
+  apagarCronograma: () => Promise<void>;
 }
 
 export const useStore = create<DataState>((set, get) => ({
   carregado: false,
+  areas: [],
   revisoes: [],
   simulados: [],
   tarefas: [],
@@ -38,14 +50,16 @@ export const useStore = create<DataState>((set, get) => ({
   metaSemanal: 150,
 
   carregarTudo: async () => {
-    const [revisoes, simulados, tarefas, config, meta] = await Promise.all([
+    const [revisoes, simulados, tarefas, config, meta, areas] = await Promise.all([
       api.get<Revisao[]>('/app/revisoes'),
       api.get<Simulado[]>('/app/simulados'),
       api.get<Tarefa[]>('/app/tarefas'),
       api.get<{ faixas: ConfigAlgoritmo['faixas'] }>('/app/config'),
       api.get<{ meta: number }>('/app/meta'),
+      api.get<Area[]>('/app/areas'),
     ]);
     set({
+      areas,
       revisoes,
       simulados,
       tarefas,
@@ -58,6 +72,7 @@ export const useStore = create<DataState>((set, get) => ({
   limpar: () =>
     set({
       carregado: false,
+      areas: [],
       revisoes: [],
       simulados: [],
       tarefas: [],
@@ -137,5 +152,49 @@ export const useStore = create<DataState>((set, get) => ({
   setMetaSemanal: async (m) => {
     const r = await api.put<{ meta: number }>('/app/meta', { meta: m });
     set({ metaSemanal: r.meta });
+  },
+
+  // A lista de áreas volta do servidor já ordenada e com o desempenho de cada
+  // conteúdo, então depois de cada alteração simplesmente recarregamos.
+  carregarAreas: async () => {
+    set({ areas: await api.get<Area[]>('/app/areas') });
+  },
+
+  criarArea: async (nome) => {
+    await api.post('/app/areas', { nome });
+    await get().carregarAreas();
+  },
+
+  renomearArea: async (id, nome) => {
+    await api.patch(`/app/areas/${id}`, { nome });
+    // Renomear também atualiza as revisões dessa área no servidor
+    const [areas, revisoes] = await Promise.all([api.get<Area[]>('/app/areas'), api.get<Revisao[]>('/app/revisoes')]);
+    set({ areas, revisoes });
+  },
+
+  removerArea: async (id) => {
+    await api.del(`/app/areas/${id}`);
+    await get().carregarAreas();
+  },
+
+  criarConteudo: async (areaId, nome) => {
+    await api.post('/app/conteudos', { areaId, nome });
+    await get().carregarAreas();
+  },
+
+  removerConteudo: async (id) => {
+    await api.del(`/app/conteudos/${id}`);
+    await get().carregarAreas();
+  },
+
+  gerarCronograma: async (dataProva, conteudoIds, maxPorDia) => {
+    const r = await api.post<ResultadoCronograma>('/app/foco-prova/cronograma', { dataProva, conteudoIds, maxPorDia });
+    set({ revisoes: await api.get<Revisao[]>('/app/revisoes') });
+    return r;
+  },
+
+  apagarCronograma: async () => {
+    await api.del('/app/foco-prova/cronograma');
+    set({ revisoes: await api.get<Revisao[]>('/app/revisoes') });
   },
 }));

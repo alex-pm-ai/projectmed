@@ -8,11 +8,11 @@ import { useStore } from '../store/useStore';
 import { StatsCard } from '../components/ui/StatsCard';
 import { AddSimuladoModal } from '../components/modals/AddSimuladoModal';
 import { formatDate, minutesToHours } from '../utils/dateUtils';
-import { AREA_COLORS } from '../data/areas';
-import type { GrandeArea } from '../types';
+import { corDaArea } from '../utils/cores';
 
 export function Simulados() {
   const { simulados, deleteSimulado } = useStore();
+  const areas = useStore((s) => s.areas);
   const [addOpen, setAddOpen] = useState(false);
   const [expanded, setExpanded] = useState<string | null>(null);
 
@@ -108,7 +108,7 @@ export function Simulados() {
                       className="h-full rounded-full transition-all"
                       style={{
                         width: `${d.pct}%`,
-                        backgroundColor: AREA_COLORS[d.fullArea as GrandeArea] ?? '#6b7280',
+                        backgroundColor: corDaArea(d.fullArea, areas),
                       }}
                     />
                   </div>
@@ -175,7 +175,7 @@ export function Simulados() {
                             <div key={d.area} className="flex items-center gap-3">
                               <span className="text-xs text-gray-400 w-44">{d.area}</span>
                               <div className="flex-1 h-1.5 bg-gray-800 rounded-full overflow-hidden">
-                                <div className="h-full rounded-full" style={{ width: `${pct}%`, backgroundColor: AREA_COLORS[d.area] ?? '#6b7280' }} />
+                                <div className="h-full rounded-full" style={{ width: `${pct}%`, backgroundColor: corDaArea(d.area, areas) }} />
                               </div>
                               <span className={`text-xs font-bold w-10 text-right ${notaColor(pct)}`}>{pct}%</span>
                               <span className="text-xs text-gray-600">{d.acertos}/{d.total}</span>
