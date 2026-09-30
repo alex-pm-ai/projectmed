@@ -2,6 +2,7 @@ import type { FastifyReply, FastifyRequest } from 'fastify';
 import { verifyAccessToken } from './jwt.js';
 import { prisma } from './prisma.js';
 import { PaymentRequiredError, UnauthorizedError } from './errors.js';
+import { acessoLiberado } from '../domain/assinatura.js';
 
 /**
  * Autenticação: valida o access token e anexa o usuarioId à request.
@@ -35,14 +36,9 @@ export async function requireAssinatura(req: FastifyRequest, _reply: FastifyRepl
   // Administrador (usuário master) não depende de assinatura.
   if (usuario?.papel === 'admin') return;
 
-  // Sem pagamento, inadimplente (atrasada), cancelada ou vencida → bloqueado.
-  const assinatura = usuario?.assinatura;
-  const ativa =
-    assinatura &&
-    assinatura.status === 'ativa' &&
-    assinatura.validoAte.getTime() > Date.now();
-
-  if (!ativa) {
+  // Nunca pagou, ou o período pago acabou sem renovação aprovada (inadimplência) → bloqueado.
+  // Quem cancelou continua até o fim do período já pago.
+  if (!acessoLiberado(usuario?.assinatura)) {
     throw new PaymentRequiredError();
   }
 }

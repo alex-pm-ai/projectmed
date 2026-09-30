@@ -12,6 +12,8 @@ const BREADCRUMBS: Record<string, string> = {
   '/app/foco-prova':   'Dashboard / Foco Prova',
   '/app/todo':         'Dashboard / Foco & Tarefas',
   '/app/config':       'Dashboard / Configuração',
+  '/app/assinatura':   'Dashboard / Minha assinatura',
+  '/app/assinatura/retorno': 'Dashboard / Minha assinatura',
 };
 
 interface Props {

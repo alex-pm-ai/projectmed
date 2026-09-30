@@ -2,6 +2,7 @@ import { prisma } from '../../shared/prisma.js';
 import { env } from '../../shared/env.js';
 import { signAccessToken } from '../../shared/jwt.js';
 import { gerarToken, sha256 } from '../../shared/crypto.js';
+import { acessoLiberado } from '../../domain/assinatura.js';
 import { hashSenha, verificarSenha, verificarSenhaFalsa } from '../../shared/password.js';
 import { AppError, ConflictError, UnauthorizedError, NotFoundError } from '../../shared/errors.js';
 import type { LoginInput, RegisterInput } from './auth.schemas.js';
@@ -148,7 +149,7 @@ export async function me(usuarioId: string) {
   if (!usuario) throw new NotFoundError('Usuário não encontrado');
 
   const a = usuario.assinatura;
-  const assinaturaAtiva = !!a && a.status === 'ativa' && a.validoAte.getTime() > Date.now();
+  const assinaturaAtiva = acessoLiberado(a);
 
   // Admin entra sem assinatura (mesma regra do requireAssinatura).
   if (usuario.papel === 'admin') {

@@ -100,9 +100,11 @@ model Assinatura {
   id           String    @id @default(cuid())
   usuarioId    String    @unique
   planoId      String
-  status       String    @default("pendente") // pendente | trial | ativa | atrasada | cancelada | expirada
-  gatewaySubId String? // id da assinatura no provedor
-  validoAte    DateTime // ← o gate de acesso olha pra cá
+  status       String    @default("pendente") // pendente | ativa | pausada | cancelada (ver domain/assinatura.ts)
+  gatewaySubId String?   @unique // id da assinatura no provedor (MP: preapproval_id)
+  checkoutUrl  String?   @db.Text // página de pagamento do provedor, enquanto pendente
+  validoAte    DateTime // ← o gate de acesso olha pra cá (fim do período pago)
+  ativadaEm    DateTime? // 1ª vez que ficou ativa (prazo de arrependimento de 7 dias)
   canceladaEm  DateTime?
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt

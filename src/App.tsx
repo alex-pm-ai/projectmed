@@ -18,6 +18,7 @@ import { Calendario } from './pages/Calendario';
 import { FocoProva } from './pages/FocoProva';
 import { TodoPomodoro } from './pages/TodoPomodoro';
 import { ConfigRevisao } from './pages/ConfigRevisao';
+import { MinhaAssinatura } from './pages/MinhaAssinatura';
 
 function Loader({ texto }: { texto: string }) {
   return (
@@ -79,6 +80,8 @@ function AppShell() {
             <Route path="foco-prova"     element={<FocoProva />} />
             <Route path="todo"           element={<TodoPomodoro />} />
             <Route path="config"         element={<ConfigRevisao />} />
+            <Route path="assinatura"     element={<MinhaAssinatura />} />
+            <Route path="assinatura/retorno" element={<MinhaAssinatura />} />
           </Routes>
         </main>
       </div>

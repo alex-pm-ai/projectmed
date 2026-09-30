@@ -17,10 +17,15 @@ export interface UsuarioAuth {
 }
 
 export interface AssinaturaInfo {
-  status: string;
+  status: string; // sem_assinatura | pendente | ativa | pausada | cancelada | admin
   ativa: boolean;
   validoAte: string | null;
-  plano: { nome: string; intervalo: string } | null;
+  plano: { nome: string; intervalo: string; preco?: number } | null;
+  // Detalhes vindos de /billing/assinatura e /billing/sincronizar
+  ativadaEm?: string | null;
+  canceladaEm?: string | null;
+  podeArrepender?: boolean;
+  checkoutUrl?: string | null;
 }
 
 interface TokensResp {

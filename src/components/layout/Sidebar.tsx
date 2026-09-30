@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import {
   LayoutDashboard, BarChart2, History, FileText,
-  Calendar, Target, CheckSquare, Settings, Plus, LogOut, X,
+  Calendar, Target, CheckSquare, Settings, Plus, LogOut, X, CreditCard,
 } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import { Logo } from '../ui/Logo';
@@ -15,6 +15,7 @@ const nav = [
   { to: '/app/foco-prova',   icon: Target,          label: 'Foco Prova' },
   { to: '/app/todo',         icon: CheckSquare,     label: 'To-Do & Pomodoro' },
   { to: '/app/config',       icon: Settings,        label: 'Configuração de revisão' },
+  { to: '/app/assinatura',   icon: CreditCard,      label: 'Minha assinatura' },
 ];
 
 interface Props {

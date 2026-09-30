@@ -20,8 +20,23 @@ const envSchema = z.object({
   PORT: z.coerce.number().default(3333),
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   WEB_ORIGIN: z.string().default('http://localhost:5173'),
-  PAYMENT_PROVIDER: z.enum(['mock', 'asaas', 'stripe', 'mercadopago']).default('mock'),
+  // Endereço público do app (usado no retorno do Mercado Pago). O MP não aceita
+  // localhost: em desenvolvimento a volta é feita pela própria tela de assinatura.
+  APP_URL: z.string().url().default('http://localhost:5173'),
+  PAYMENT_PROVIDER: z.enum(['mock', 'mercadopago']).default('mock'),
   PAYMENT_WEBHOOK_SECRET: segredo.default('segredo-do-webhook'),
+  MERCADOPAGO_ACCESS_TOKEN: z.string().optional(),
+  MERCADOPAGO_PUBLIC_KEY: z.string().optional(),
+  // SÓ EM TESTE: o Mercado Pago exige que quem paga também seja um usuário de teste.
+  // Preencha com o e-mail do "comprador de teste" (ex.: test_user_123@testuser.com).
+  // Em produção deixe vazio — vale o e-mail de cada pessoa.
+  MERCADOPAGO_EMAIL_COMPRADOR_TESTE: z.string().email().optional().or(z.literal('')),
+  // Chave secreta dos webhooks (painel do MP > Webhooks). Só existe depois de publicar.
+  MERCADOPAGO_WEBHOOK_SECRET: z.string().optional(),
+}).superRefine((e, ctx) => {
+  if (e.PAYMENT_PROVIDER === 'mercadopago' && !e.MERCADOPAGO_ACCESS_TOKEN) {
+    ctx.addIssue({ code: 'custom', path: ['MERCADOPAGO_ACCESS_TOKEN'], message: 'obrigatório com PAYMENT_PROVIDER=mercadopago' });
+  }
 });
 
 const parsed = envSchema.safeParse(process.env);

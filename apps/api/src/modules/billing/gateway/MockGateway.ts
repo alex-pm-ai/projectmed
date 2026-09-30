@@ -37,7 +37,7 @@ export class MockGateway implements PaymentGateway {
     // no-op no mock
   }
 
-  validarWebhook(entrada: WebhookEntrada): { evento: EventoPagamento; eventId: string } {
+  async validarWebhook(entrada: WebhookEntrada): Promise<{ evento: EventoPagamento; eventId: string }> {
     // Em produção: validar HMAC com PAYMENT_WEBHOOK_SECRET aqui.
     const body = entrada.body as Record<string, unknown>;
     const eventId = (body.eventId as string) ?? randomUUID();
