@@ -78,5 +78,6 @@ export interface ResultadoCronograma {
   sessoes: number;
   conteudos: number;
   dias: number;
+  substituidas: number; // revisões automáticas pendentes trocadas pelo cronograma
   naoAgendados: string[];
 }

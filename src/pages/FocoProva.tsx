@@ -147,6 +147,12 @@ export function FocoProva() {
             </Link>
             .
           </p>
+          {resultado.substituidas > 0 && (
+            <p className="text-xs text-gray-300">
+              {resultado.substituidas} revisão(ões) automática(s) pendente(s) desses conteúdos foram substituídas pelo
+              cronograma, para não haver revisões duplicadas.
+            </p>
+          )}
           {resultado.naoAgendados.length > 0 && (
             <p className="text-amber-300 text-xs">
               Não couberam antes da prova com o limite de {maxPorDia} por dia: {resultado.naoAgendados.join(', ')}.
@@ -218,6 +224,10 @@ export function FocoProva() {
             <li>Em cada dia entram primeiro os conteúdos mais atrasados e com pior desempenho, até o limite diário.</li>
             <li>Na reta final, todo conteúdo ganha pelo menos uma revisão antes da prova.</li>
             <li>Gerar de novo substitui o cronograma pendente anterior — as revisões já concluídas continuam.</li>
+            <li>
+              Enquanto um conteúdo estiver no cronograma, ele segue só o cronograma: não recebe revisões automáticas
+              extras ao registrar estudo ou concluir revisões.
+            </li>
           </ul>
         </details>
       </div>

@@ -48,8 +48,19 @@ export async function focoProvaRoutes(app: FastifyInstance) {
       maxPorDia
     );
 
-    await prisma.$transaction([
+    const [, substituidas] = await prisma.$transaction([
       prisma.revisao.deleteMany({ where: { usuarioId, origem: 'foco_prova', status: 'Pendente' } }),
+      // Os conteúdos do cronograma passam a seguir só o cronograma: remove as revisões
+      // automáticas pendentes deles (as manuais sem agendamento automático ficam).
+      prisma.revisao.deleteMany({
+        where: {
+          usuarioId,
+          origem: 'manual',
+          status: 'Pendente',
+          gerarRevisaoInteligente: true,
+          OR: conteudos.map((c) => ({ grandeArea: c.area.nome, subArea: c.nome })),
+        },
+      }),
       prisma.revisao.createMany({
         data: resultado.sessoes.map((s) => ({
           usuarioId,
@@ -69,6 +80,7 @@ export async function focoProvaRoutes(app: FastifyInstance) {
       sessoes: resultado.sessoes.length,
       conteudos: conteudos.length,
       dias,
+      substituidas: substituidas.count,
       naoAgendados: resultado.naoAgendados.map((n) => `${n.conteudo} (${n.area})`),
     };
   });

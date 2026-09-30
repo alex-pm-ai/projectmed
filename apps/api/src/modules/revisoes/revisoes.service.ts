@@ -55,7 +55,25 @@ export async function concluir(
 
   const faixas = await getFaixas(usuarioId);
   const ap = calcularAproveitamento(payload.questoesFeitas, payload.questoesAcertadas);
-  const proxima = calcularProximaRevisao(ap, today(), faixas);
+
+  // Conteúdo que está no cronograma Foco Prova segue o cronograma: não agenda outra
+  // revisão automática (evita duas pendentes do mesmo conteúdo). A comparação de nomes
+  // ignora maiúsculas/acentos pela collation do MySQL.
+  const noFoco = rev.gerarRevisaoInteligente
+    ? await prisma.revisao.findFirst({
+        where: {
+          usuarioId,
+          origem: 'foco_prova',
+          status: 'Pendente',
+          grandeArea: rev.grandeArea,
+          subArea: rev.subArea,
+          dataRevisao: { gte: today() },
+          NOT: { id },
+        },
+        orderBy: { dataRevisao: 'asc' },
+      })
+    : null;
+  const proxima = noFoco?.dataRevisao ?? calcularProximaRevisao(ap, today(), faixas);
 
   const concluida = await prisma.revisao.update({
     where: { id },
@@ -71,7 +89,7 @@ export async function concluir(
   });
 
   let novaPendente = null;
-  if (rev.gerarRevisaoInteligente) {
+  if (rev.gerarRevisaoInteligente && !noFoco) {
     novaPendente = await prisma.revisao.create({
       data: {
         usuarioId,
@@ -90,7 +108,7 @@ export async function concluir(
     });
   }
 
-  return { concluida, novaPendente };
+  return { concluida, novaPendente, seguindoCronogramaFoco: !!noFoco };
 }
 
 /** Redistribui as revisões atrasadas a partir de amanhã, em grupos por dia. */

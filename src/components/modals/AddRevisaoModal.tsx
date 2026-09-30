@@ -29,6 +29,9 @@ const COR_FAIXA = {
   Excelente: 'bg-accent/15 text-accent',
 } as const;
 
+// Compara nomes sem diferenciar maiúsculas/acentos (igual ao servidor)
+const normalizar = (t: string) => t.trim().toLocaleLowerCase('pt-BR').normalize('NFD').replace(/[̀-ͯ]/g, '');
+
 function somarDias(data: string, dias: number) {
   const d = new Date(data + 'T12:00:00');
   d.setDate(d.getDate() + dias);
@@ -41,7 +44,7 @@ function somarDias(data: string, dias: number) {
  * de revisão; ao concluir essa revisão, o servidor agenda a seguinte, e assim por diante.
  */
 export function AddRevisaoModal({ open, onClose }: Props) {
-  const { addRevisao, configAlgoritmo, areas } = useStore();
+  const { addRevisao, configAlgoritmo, areas, revisoes } = useStore();
   const [tipo, setTipo] = useState<TipoAtividade>('Questoes');
   const [area, setArea] = useState<GrandeArea>(areas[0]?.nome ?? 'Clínica Médica');
   const [subArea, setSubArea] = useState('');
@@ -70,6 +73,21 @@ export function AddRevisaoModal({ open, onClose }: Props) {
   const proxima = semQuestoes ? somarDias(data, menorIntervalo) : calcularProximaRevisao(aproveitamento, data, configAlgoritmo);
   const acertosInvalidos = a > f;
 
+  // Conteúdo que está no cronograma Foco Prova segue o cronograma: não agendamos outra
+  // revisão automática (evita duas pendentes do mesmo conteúdo).
+  const conteudo = subArea.trim() || (tipo === 'Flashcards' ? 'Sessão de Flashcards' : 'Geral');
+  const proximaFoco = revisoes
+    .filter(
+      (r) =>
+        r.origem === 'foco_prova' &&
+        r.status === 'Pendente' &&
+        r.dataRevisao >= data &&
+        normalizar(r.grandeArea) === normalizar(area) &&
+        normalizar(r.subArea) === normalizar(conteudo)
+    )
+    .map((r) => r.dataRevisao)
+    .sort()[0];
+
   const nomeItem = tipo === 'Flashcards' ? 'Cards' : 'Questões';
 
   function limpar() {
@@ -86,7 +104,6 @@ export function AddRevisaoModal({ open, onClose }: Props) {
     setErro('');
     setSalvando(true);
 
-    const conteudo = subArea.trim() || (tipo === 'Flashcards' ? 'Sessão de Flashcards' : 'Geral');
     try {
       await addRevisao({
         tipo,
@@ -99,10 +116,10 @@ export function AddRevisaoModal({ open, onClose }: Props) {
         aproveitamento,
         status: 'Concluída',
         gerarRevisaoInteligente: agendar,
-        proximaRevisao: agendar ? proxima : null,
+        proximaRevisao: agendar ? (proximaFoco ?? proxima) : null,
       });
 
-      if (agendar) {
+      if (agendar && !proximaFoco) {
         await addRevisao({
           tipo,
           grandeArea: area,
@@ -225,7 +242,12 @@ export function AddRevisaoModal({ open, onClose }: Props) {
         <div className={`rounded-lg border px-3 py-3 transition-colors ${agendar ? 'border-accent/40 bg-accent/5' : 'border-card-border'}`}>
           <Checkbox checked={agendar} onChange={setAgendar} label={<span className="text-sm text-white">Agendar próxima revisão automaticamente</span>} />
           <p className="text-xs text-gray-500 mt-1.5 pl-[26px]">
-            {agendar ? (
+            {agendar && proximaFoco ? (
+              <>
+                Este conteúdo está no seu cronograma Foco Prova — a próxima revisão dele já está marcada para{' '}
+                <span className="text-accent">{formatDate(proximaFoco)}</span>. Não vamos agendar outra.
+              </>
+            ) : agendar ? (
               <>
                 Próxima revisão em <span className="text-accent">{formatDate(proxima)}</span>
                 {semQuestoes
