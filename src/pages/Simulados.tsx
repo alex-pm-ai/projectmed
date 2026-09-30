@@ -82,9 +82,9 @@ export function Simulados() {
                 <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
                 <Radar name="%" dataKey="pct" stroke="#5dd62c" fill="#5dd62c" fillOpacity={0.3} strokeWidth={2} />
                 <Tooltip
-                  content={({ active, payload }: any) => {
+                  content={({ active, payload }: { active?: boolean; payload?: ReadonlyArray<{ payload?: unknown }> }) => {
                     if (!active || !payload?.[0]) return null;
-                    const d = payload[0].payload;
+                    const d = payload[0].payload as (typeof radarData)[number];
                     return (
                       <div className="bg-card border border-card-border rounded-lg px-3 py-2 text-xs">
                         <p className="text-gray-300">{d.fullArea}</p>

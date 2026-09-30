@@ -7,6 +7,7 @@ import {
 import { useStore } from '../store/useStore';
 import { StatsCard } from '../components/ui/StatsCard';
 import { corDaArea } from '../utils/cores';
+import type { Area } from '../types';
 import { daysAgo, DAY_NAMES_SHORT, minutesToHours, MONTH_NAMES, startOfMonth, formatDateShort } from '../utils/dateUtils';
 
 type Period = 'Semana' | 'Mês';
@@ -84,53 +85,11 @@ export function Desempenho() {
     ? `${formatDateShort(daysAgo(6))} - ${formatDateShort(daysAgo(0))}`
     : MONTH_NAMES[currentDate.getMonth()];
 
-  const PeriodBtn = ({ p }: { p: Period }) => (
-    <button
-      onClick={() => setPeriod(p)}
-      className={`px-3 py-1 rounded text-xs font-medium transition-colors ${period === p ? 'bg-primary text-primary-foreground' : 'text-gray-400 hover:text-white'}`}
-    >
-      {p}
-    </button>
-  );
-
-  const CustomTooltip = ({ active, payload, label }: any) => {
-    if (!active || !payload?.length) return null;
-    return (
-      <div className="bg-card border border-card-border rounded-lg px-3 py-2 text-xs">
-        <p className="text-gray-400 mb-1">{label}</p>
-        {payload.map((p: any) => (
-          <p key={p.name} style={{ color: p.color }}>{p.name}: {p.value}</p>
-        ))}
-      </div>
-    );
-  };
-
-  const DonutChart = ({ data, title }: { data: typeof porAreaQData; title: string }) => (
-    <div className="bg-card border border-card-border rounded-xl p-5">
-      <div className="flex items-center justify-between mb-4">
-        <p className="text-sm font-medium text-white">{title}</p>
-        <button className="text-xs text-gray-500 flex items-center gap-1">
-          Todo o período
-        </button>
-      </div>
-      <div className="flex items-center gap-4">
-        <PieChart width={160} height={160}>
-          <Pie data={data} cx={75} cy={75} innerRadius={45} outerRadius={70} dataKey="value" paddingAngle={2}>
-            {data.map((entry) => (
-              <Cell key={entry.name} fill={corDaArea(entry.name, areas)} />
-            ))}
-          </Pie>
-        </PieChart>
-        <div className="flex-1 space-y-1.5">
-          {data.map(d => (
-            <div key={d.name} className="flex items-center gap-2">
-              <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: corDaArea(d.name, areas) }} />
-              <span className="text-xs text-gray-400 flex-1 truncate">{d.name} ({d.pct}%)</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
+  const periodBtns = (
+    <>
+      <PeriodBtn p="Semana" period={period} onChange={setPeriod} />
+      <PeriodBtn p="Mês" period={period} onChange={setPeriod} />
+    </>
   );
 
   return (
@@ -149,7 +108,7 @@ export function Desempenho() {
               <span className="text-accent">↗</span> Questões Realizadas
             </p>
             <div className="flex items-center gap-1">
-              <PeriodBtn p="Semana" /><PeriodBtn p="Mês" />
+              {periodBtns}
               <span className="text-xs text-gray-500 ml-1">{periodLabel}</span>
             </div>
           </div>
@@ -164,7 +123,7 @@ export function Desempenho() {
           </ResponsiveContainer>
         </div>
 
-        {porAreaQData.length > 0 && <DonutChart data={porAreaQData} title="Questões por área" />}
+        {porAreaQData.length > 0 && <DonutChart data={porAreaQData} title="Questões por área" areas={areas} />}
       </div>
 
       <div className="grid grid-cols-2 gap-4">
@@ -175,7 +134,7 @@ export function Desempenho() {
               <span className="text-green-400">◷</span> Tempo Estudado
             </p>
             <div className="flex items-center gap-1">
-              <PeriodBtn p="Semana" /><PeriodBtn p="Mês" />
+              {periodBtns}
               <span className="text-xs text-gray-500 ml-1">{periodLabel}</span>
             </div>
           </div>
@@ -190,7 +149,73 @@ export function Desempenho() {
           </ResponsiveContainer>
         </div>
 
-        {porAreaTData.length > 0 && <DonutChart data={porAreaTData} title="Tempo por área" />}
+        {porAreaTData.length > 0 && <DonutChart data={porAreaTData} title="Tempo por área" areas={areas} />}
+      </div>
+    </div>
+  );
+}
+
+// Componentes auxiliares declarados fora de Desempenho: se fossem criados dentro dele,
+// o React recriaria os gráficos do zero a cada renderização.
+
+function PeriodBtn({ p, period, onChange }: { p: Period; period: Period; onChange: (p: Period) => void }) {
+  return (
+    <button
+      onClick={() => onChange(p)}
+      className={`px-3 py-1 rounded text-xs font-medium transition-colors ${period === p ? 'bg-primary text-primary-foreground' : 'text-gray-400 hover:text-white'}`}
+    >
+      {p}
+    </button>
+  );
+}
+
+interface TooltipLinha {
+  active?: boolean;
+  label?: string | number;
+  payload?: ReadonlyArray<{ name?: string | number; value?: unknown; color?: string }>;
+}
+
+function CustomTooltip({ active, payload, label }: TooltipLinha) {
+  if (!active || !payload?.length) return null;
+  return (
+    <div className="bg-card border border-card-border rounded-lg px-3 py-2 text-xs">
+      <p className="text-gray-400 mb-1">{label}</p>
+      {payload.map((p) => (
+        <p key={String(p.name)} style={{ color: p.color }}>{p.name}: {String(p.value)}</p>
+      ))}
+    </div>
+  );
+}
+
+interface FatiaArea {
+  name: string;
+  value: number;
+  pct: number;
+}
+
+function DonutChart({ data, title, areas }: { data: FatiaArea[]; title: string; areas: Area[] }) {
+  return (
+    <div className="bg-card border border-card-border rounded-xl p-5">
+      <div className="flex items-center justify-between mb-4">
+        <p className="text-sm font-medium text-white">{title}</p>
+        <span className="text-xs text-gray-500">Todo o período</span>
+      </div>
+      <div className="flex items-center gap-4">
+        <PieChart width={160} height={160}>
+          <Pie data={data} cx={75} cy={75} innerRadius={45} outerRadius={70} dataKey="value" paddingAngle={2} isAnimationActive={false}>
+            {data.map((entry) => (
+              <Cell key={entry.name} fill={corDaArea(entry.name, areas)} />
+            ))}
+          </Pie>
+        </PieChart>
+        <div className="flex-1 space-y-1.5">
+          {data.map(d => (
+            <div key={d.name} className="flex items-center gap-2">
+              <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: corDaArea(d.name, areas) }} />
+              <span className="text-xs text-gray-400 flex-1 truncate">{d.name} ({d.pct}%)</span>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

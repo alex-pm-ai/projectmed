@@ -29,10 +29,12 @@ export function TodoPomodoro() {
   const pending = tarefas.filter(t => !t.concluida);
   const done = tarefas.filter(t => t.concluida);
 
-  useEffect(() => {
-    setTimeLeft(customDurations[mode]);
+  // Trocar de modo reinicia o relógio com a duração daquele modo
+  function mudarModo(m: PomodoroMode) {
+    setMode(m);
+    setTimeLeft(customDurations[m]);
     setRunning(false);
-  }, [mode]);
+  }
 
   useEffect(() => {
     if (running) {
@@ -138,7 +140,7 @@ export function TodoPomodoro() {
             {(['Pomodoro', 'Pausa Curta', 'Pausa Longa'] as PomodoroMode[]).map(m => (
               <button
                 key={m}
-                onClick={() => setMode(m)}
+                onClick={() => mudarModo(m)}
                 className={`flex-1 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                   mode === m ? 'bg-white/10 text-white' : 'text-gray-500 hover:text-gray-300'
                 }`}

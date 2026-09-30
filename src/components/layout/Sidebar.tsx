@@ -77,7 +77,7 @@ export function Sidebar({ open, onClose, onAddRevisao, onAddFlashcard }: Props) 
       <div className="px-3 pb-2 space-y-2">
         <button
           onClick={onAddFlashcard}
-          className="w-full flex items-center justify-center gap-2 py-2 rounded-lg bg-purple-600/20 text-purple-400 hover:bg-purple-600/30 text-sm font-medium transition-colors"
+          className="w-full flex items-center justify-center gap-2 py-2 rounded-lg border border-card-border text-gray-300 hover:border-accent/50 hover:text-white text-sm font-medium transition-colors"
         >
           <Plus size={14} />
           Adicionar Flashcards
