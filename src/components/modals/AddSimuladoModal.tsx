@@ -54,14 +54,14 @@ export function AddSimuladoModal({ open, onClose }: Props) {
             <input
               value={titulo} onChange={e => setTitulo(e.target.value)}
               placeholder="Ex: ENAMED"
-              className="w-full bg-muted border border-card-border rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-primary"
+              className="w-full bg-muted border border-card-border rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-accent"
             />
           </div>
           <div>
             <label className="block text-xs text-gray-400 mb-1.5">Ano</label>
             <input
               value={ano} onChange={e => setAno(e.target.value)}
-              className="w-full bg-muted border border-card-border rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary"
+              className="w-full bg-muted border border-card-border rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-accent"
             />
           </div>
         </div>
@@ -71,21 +71,21 @@ export function AddSimuladoModal({ open, onClose }: Props) {
             <label className="block text-xs text-gray-400 mb-1.5">Data</label>
             <input
               type="date" value={data} onChange={e => setData(e.target.value)}
-              className="w-full bg-muted border border-card-border rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary"
+              className="w-full bg-muted border border-card-border rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-accent"
             />
           </div>
           <div>
             <label className="block text-xs text-gray-400 mb-1.5">Tempo (min)</label>
             <input
               type="number" value={tempo} onChange={e => setTempo(e.target.value)}
-              className="w-full bg-muted border border-card-border rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary"
+              className="w-full bg-muted border border-card-border rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-accent"
             />
           </div>
           <div>
             <label className="block text-xs text-gray-400 mb-1.5">Total de Questões</label>
             <input
               type="number" value={total} onChange={e => setTotal(e.target.value)}
-              className="w-full bg-muted border border-card-border rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary"
+              className="w-full bg-muted border border-card-border rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-accent"
             />
           </div>
         </div>
@@ -96,7 +96,7 @@ export function AddSimuladoModal({ open, onClose }: Props) {
             <input
               type="number" value={acertos} onChange={e => setAcertos(e.target.value)}
               placeholder="0"
-              className="w-40 bg-muted border border-card-border rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-primary"
+              className="w-40 bg-muted border border-card-border rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-accent"
             />
             <span className={`text-lg font-bold ${nota >= 70 ? 'text-green-400' : nota >= 50 ? 'text-yellow-400' : 'text-red-400'}`}>
               {nota}%
@@ -115,7 +115,7 @@ export function AddSimuladoModal({ open, onClose }: Props) {
                   placeholder="Acertos"
                   value={porArea[a]?.acertos}
                   onChange={e => setPorArea(p => ({ ...p, [a]: { ...p[a], acertos: e.target.value } }))}
-                  className="w-24 bg-muted border border-card-border rounded-lg px-2 py-1 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-primary"
+                  className="w-24 bg-muted border border-card-border rounded-lg px-2 py-1 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-accent"
                 />
                 <span className="text-gray-600 text-xs">/</span>
                 <input
@@ -123,7 +123,7 @@ export function AddSimuladoModal({ open, onClose }: Props) {
                   placeholder="Total"
                   value={porArea[a]?.total}
                   onChange={e => setPorArea(p => ({ ...p, [a]: { ...p[a], total: e.target.value } }))}
-                  className="w-24 bg-muted border border-card-border rounded-lg px-2 py-1 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-primary"
+                  className="w-24 bg-muted border border-card-border rounded-lg px-2 py-1 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-accent"
                 />
               </div>
             ))}

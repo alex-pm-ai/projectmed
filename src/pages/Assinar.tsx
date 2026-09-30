@@ -105,7 +105,7 @@ export function Assinar() {
               {planos.map((p) => (
                 <div
                   key={p.id}
-                  className="border border-card-border rounded-xl p-4 hover:border-primary/50 transition-colors"
+                  className="border border-card-border rounded-xl p-4 hover:border-accent/50 transition-colors"
                 >
                   <div className="flex items-center justify-between mb-3">
                     <div>
@@ -146,7 +146,7 @@ export function Assinar() {
               <p className="text-xs text-gray-300 break-all font-mono">{checkout.pixQrCode}</p>
             </div>
 
-            <div className="flex items-center justify-center gap-2 text-sm text-primary mb-5">
+            <div className="flex items-center justify-center gap-2 text-sm text-accent mb-5">
               <Loader2 size={15} className="animate-spin" />
               Aguardando confirmação do pagamento...
             </div>

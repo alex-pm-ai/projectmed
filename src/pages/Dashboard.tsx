@@ -49,9 +49,9 @@ export function Dashboard() {
 
       {/* Orientação para quem ainda não tem nenhuma revisão cadastrada */}
       {revisoes.length === 0 && (
-        <div className="flex items-start gap-2.5 bg-primary/10 border border-primary/30 rounded-xl px-4 py-3">
-          <Sparkles size={16} className="text-primary mt-0.5 flex-shrink-0" />
-          <p className="text-sm text-primary/90">
+        <div className="flex items-start gap-2.5 bg-accent/10 border border-accent/30 rounded-xl px-4 py-3">
+          <Sparkles size={16} className="text-accent mt-0.5 flex-shrink-0" />
+          <p className="text-sm text-accent/90">
             Você ainda não tem nenhuma revisão cadastrada. Use o botão{' '}
             <span className="font-medium">"Adicionar Revisão"</span> no menu lateral para começar.
           </p>
@@ -91,7 +91,7 @@ export function Dashboard() {
           value={questoesSemana}
           sub="Continue o bom trabalho!"
           subColor="text-gray-500"
-          icon={<TrendingUp size={16} className="text-primary" />}
+          icon={<TrendingUp size={16} className="text-accent" />}
         />
         <StatsCard
           label="Taxa de acerto na semana"
@@ -121,12 +121,12 @@ export function Dashboard() {
                 type="number"
                 value={metaInput}
                 onChange={e => setMetaInput(e.target.value)}
-                className="w-24 bg-muted border border-card-border rounded px-2 py-1 text-sm text-white focus:outline-none focus:border-primary"
+                className="w-24 bg-muted border border-card-border rounded px-2 py-1 text-sm text-white focus:outline-none focus:border-accent"
               />
-              <button onClick={saveMeta} className="text-xs text-primary hover:text-primary">Salvar</button>
+              <button onClick={saveMeta} className="text-xs text-accent hover:text-accent">Salvar</button>
             </div>
           ) : (
-            <button onClick={() => setEditMeta(true)} className="text-xs text-primary hover:text-primary">Definir Meta</button>
+            <button onClick={() => setEditMeta(true)} className="text-xs text-accent hover:text-accent">Definir Meta</button>
           )}
         </div>
         <div className="flex items-center justify-between text-xs text-gray-500 mb-2">
@@ -166,7 +166,7 @@ export function Dashboard() {
             const dayRevs = revisoes.filter(r => r.dataRevisao === date);
             const isToday = date === today();
             return (
-              <div key={date} className={`min-h-24 rounded-lg border p-1.5 ${isToday ? 'border-primary/50 bg-primary/5' : 'border-card-border'}`}>
+              <div key={date} className={`min-h-24 rounded-lg border p-1.5 ${isToday ? 'border-accent/50 bg-accent/5' : 'border-card-border'}`}>
                 <p className={`text-xs font-medium mb-1 text-center w-6 h-6 flex items-center justify-center rounded-full mx-auto ${isToday ? 'bg-primary text-primary-foreground' : 'text-gray-400'}`}>
                   {parseInt(date.split('-')[2])}
                 </p>

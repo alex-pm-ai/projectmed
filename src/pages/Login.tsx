@@ -71,7 +71,7 @@ export function Login() {
                   value={nome}
                   onChange={(e) => setNome(e.target.value)}
                   required
-                  className="w-full bg-muted border border-card-border rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-primary"
+                  className="w-full bg-muted border border-card-border rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-accent"
                 />
               </div>
             )}
@@ -83,7 +83,7 @@ export function Login() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full bg-muted border border-card-border rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-primary"
+                className="w-full bg-muted border border-card-border rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-accent"
               />
             </div>
 
@@ -97,7 +97,7 @@ export function Login() {
                 minLength={modo === 'register' ? 8 : undefined}
                 maxLength={128}
                 autoComplete={modo === 'register' ? 'new-password' : 'current-password'}
-                className="w-full bg-muted border border-card-border rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-primary"
+                className="w-full bg-muted border border-card-border rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-accent"
               />
               {modo === 'register' && (
                 <p className="text-[11px] text-gray-500 mt-1">Mínimo de 8 caracteres. Evite senhas óbvias.</p>
@@ -125,7 +125,7 @@ export function Login() {
                 setModo(modo === 'login' ? 'register' : 'login');
                 setErro('');
               }}
-              className="text-xs text-gray-500 hover:text-primary transition-colors"
+              className="text-xs text-gray-500 hover:text-accent transition-colors"
             >
               {modo === 'login'
                 ? 'Não tem conta? Cadastre-se'

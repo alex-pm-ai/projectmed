@@ -93,7 +93,7 @@ export function Calendario() {
                   key={date}
                   onClick={() => setSelected(isSelected ? null : date)}
                   className={`border-b border-r border-card-border/30 min-h-28 p-1.5 cursor-pointer transition-colors ${
-                    isSelected ? 'bg-primary/10' : 'hover:bg-white/[0.02]'
+                    isSelected ? 'bg-accent/10' : 'hover:bg-white/[0.02]'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-1">

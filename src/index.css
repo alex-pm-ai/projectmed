@@ -5,16 +5,16 @@
 * { box-sizing: border-box; }
 
 body {
-  background-color: #0a0a09;
-  color: #f4f6f2;
+  background-color: #0f0f0f;
+  color: #f8f8f8;
   font-family: 'Manrope', ui-sans-serif, system-ui, sans-serif;
   margin: 0;
 }
 
 ::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: #1c1d1b; }
-::-webkit-scrollbar-thumb { background: #374151; border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: #4b5563; }
+::-webkit-scrollbar-track { background: #202020; }
+::-webkit-scrollbar-thumb { background: #3a3a3a; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #337418; }
 
 input[type="date"]::-webkit-calendar-picker-indicator {
   filter: invert(0.5);
@@ -23,3 +23,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button { opacity: 1; }
+
+/* Texto com gradiente: verde vivo (#5DD62C) → branco */
+.text-brand-gradient {
+  background-image: linear-gradient(90deg, #5dd62c 0%, #f8f8f8 140%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
